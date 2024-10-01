@@ -91,9 +91,9 @@ public class LoginController extends HttpServlet {
         } else {
             session.setAttribute("user", user);
             if (user.getRole().equalsIgnoreCase(RoleConstant.ADMIN_ROLE)) {
-                response.sendRedirect("headmaster/dashboard");
-            } else if (user.getRole().equalsIgnoreCase(RoleConstant.STAFF_ROLE)) {
-                response.sendRedirect("headmaster/dashboard");
+                response.sendRedirect(request.getContextPath()+"/dashboard");
+            } else if (user.getRole().equalsIgnoreCase(RoleConstant.USER_ROLE)) {
+                response.sendRedirect(request.getContextPath()+"/dishes");
             }
         }
     }

@@ -9,8 +9,8 @@
         <servlet-class>controllers.LogoutController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>StudentDashBoardController</servlet-name>
-        <servlet-class>controllers.StudentDashBoardController</servlet-class>
+        <servlet-name>AdminDashBoardController</servlet-name>
+        <servlet-class>controllers.AdminDashboardController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProfileController</servlet-name>
@@ -21,16 +21,8 @@
         <servlet-class>controllers.RegisterController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>TeacherDashBoardController</servlet-name>
-        <servlet-class>controllers.TeacherDashBoardController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ManageTeacher</servlet-name>
-        <servlet-class>controllers.ManageTeacher</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ManageClass</servlet-name>
-        <servlet-class>controllers.ManageClass</servlet-class>
+        <servlet-name>DishController</servlet-name>
+        <servlet-class>controllers.DishesController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
@@ -41,8 +33,8 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>StudentDashBoardController</servlet-name>
-        <url-pattern>/student/dashboard</url-pattern>
+        <servlet-name>AdminDashBoardController</servlet-name>
+        <url-pattern>/dashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ProfileController</servlet-name>
@@ -52,17 +44,10 @@
         <servlet-name>RegisterController</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
+   
     <servlet-mapping>
-        <servlet-name>TeacherDashBoardController</servlet-name>
-        <url-pattern>/teacher/dashboard</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ManageTeacher</servlet-name>
-        <url-pattern>/manage/teacher</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ManageClass</servlet-name>
-        <url-pattern>/manage/class</url-pattern>
+        <servlet-name>DishController</servlet-name>
+        <url-pattern>/dishes</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -71,7 +56,7 @@
     </session-config>
     <welcome-file-list>
         <welcome-file>
-            login
+            dishes
         </welcome-file>
     </welcome-file-list>
 </web-app>

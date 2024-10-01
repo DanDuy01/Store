@@ -147,7 +147,7 @@ public class RegisterController extends HttpServlet {
         user.setUserId(currentTimeInInt);
         String paswordHash = PasswordUtil.hashPassword(password);
         user.setPassword(paswordHash);        
-        user.setRole(RoleConstant.STAFF_ROLE);
+        user.setRole(RoleConstant.USER_ROLE);
         ud.registerProfile(user);
 //        session.setAttribute("user", user);
         response.sendRedirect("login");

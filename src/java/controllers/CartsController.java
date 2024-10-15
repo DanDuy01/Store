@@ -6,8 +6,10 @@ package controllers;
 
 import dal.implement.CartDAOImpl;
 import dal.implement.DishDAOImpl;
+import dal.implement.TableDAOImpl;
 import dal.interfaces.ICartDAO;
 import dal.interfaces.IDishDAO;
+import dal.interfaces.ITableDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,7 +17,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import models.Cart;
+import models.DiningTable;
 import models.Dish;
 import models.User;
 
@@ -73,6 +77,8 @@ public class CartsController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ICartDAO cd = new CartDAOImpl();
+
         String productId_raw = request.getParameter("product_id");
         int product_id = Integer.parseInt(productId_raw);
         HttpSession session = request.getSession();
@@ -81,13 +87,27 @@ public class CartsController extends HttpServlet {
         if (u == null) {
             response.sendRedirect(request.getContextPath() + "/login");
         } else {
-            String table_raw = request.getParameter("table");
-            int table = -1;
-            if (table_raw != null) {
-                table = Integer.parseInt(table_raw);
-            }
             int user_id = u.getUserId();
-            ICartDAO cd = new CartDAOImpl();
+            Cart existCart = cd.checkCart(user_id);
+            int table = -1;
+            if (existCart != null) {
+                table = existCart.getTable().getId();
+                session.setAttribute("tb", existCart.getTable());
+            } else {
+                String table_raw = request.getParameter("table");
+                if (table_raw != null) {
+                    table = Integer.parseInt(table_raw);
+                }
+                ITableDAO it = new TableDAOImpl();
+                if (table != -1) {
+                    DiningTable t = it.getTableById(table);
+                    session.setAttribute("tb", t);
+                } else {
+                    List<DiningTable> tables = it.getAllTable();
+                    session.setAttribute("tables", tables);
+                }
+            }
+
             Cart c = cd.checkCart(user_id, product_id, table);
 
             int quantity = 1;

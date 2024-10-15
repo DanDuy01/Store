@@ -158,6 +158,51 @@ public class CartDAOImpl extends DBContext implements ICartDAO {
         } else {
             sql += " and table_id <> -1";
         }
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, user_id);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Cart c = new Cart();
+                c.setCustomer_id(rs.getInt(1));
+                c.setDish_id(rs.getInt(2));
+                c.setQuantity(rs.getInt(3));
+                c.setTotal_cost(rs.getInt(4));
+                c.setTable_id(rs.getInt(5));
+
+                IUserDAO ud = new UserDAOImpl();
+                User u = ud.getUserById(user_id);
+                c.setCustomer(u);
+                IDishDAO id = new DishDAOImpl();
+                Dish d = id.getDishByID(rs.getInt(2));
+                c.setDish(d);
+                if (rs.getInt(5) != -1) {
+                    ITableDAO td = new TableDAOImpl();
+                    DiningTable t = td.getTableById(rs.getInt(5));
+                    c.setTable(t);
+                }
+                list.add(c);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CartDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<Cart> getCartInfoByUserId(int user_id) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(CartDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        List<Cart> list = new ArrayList<>();
+        String sql = "select * from Cart where [customer_id] = ?";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -286,6 +331,41 @@ public class CartDAOImpl extends DBContext implements ICartDAO {
             } catch (SQLException e) {
             }
         }
+    }
+
+    @Override
+    public Cart checkCart(int user_id) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(CartDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String sql = "select top 1* from Cart where [customer_id] = ? and table_id <> -1";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, user_id);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Cart c = new Cart();
+                c.setCustomer_id(rs.getInt(1));
+                c.setDish_id(rs.getInt(2));
+                c.setQuantity(rs.getInt(3));
+                c.setTotal_cost(rs.getInt(4));
+                c.setTable_id(rs.getInt(5));
+                ITableDAO td = new TableDAOImpl();
+                DiningTable t = td.getTableById(rs.getInt(5));
+                c.setTable(t);
+                return c;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CartDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return null;
     }
 
 }

@@ -11,6 +11,8 @@ public interface ICartDAO {
 
     public Cart checkCart(int user_id, int product_id, int table);
 
+    public Cart checkCart(int user_id);
+
     public void addToCart(int product_id, int tableId, int quantity, int total_cost, int user_id);
 
     public void updateQuantityProductInCart(int product_id, int table_id, int quantity, int total_cost, int user_id);
@@ -25,4 +27,5 @@ public interface ICartDAO {
 
     public void deleteCartByUserId(int user_id, int table);
 
+    List<Cart> getCartInfoByUserId(int user_id);
 }

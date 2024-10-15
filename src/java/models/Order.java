@@ -4,22 +4,67 @@
  */
 package models;
 
-import models.DiningTable;
-import models.User;
+import java.util.Date;
 
-/**
- *
- * @author ThinkPro
- */
 public class Order {
+
     private int id;
     private int customer_id;
     private int table_id;
-    private String status;
-    private String order_datetime;
+    private String status, customer_name;
+    private Date order_datetime;
     private int total_cost;
     private User customer;
     private DiningTable table;
+    private String email, phone, address, note, payment_method;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getCustomer_name() {
+        return customer_name;
+    }
+
+    public void setCustomer_name(String customer_name) {
+        this.customer_name = customer_name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getPayment_method() {
+        return payment_method;
+    }
+
+    public void setPayment_method(String payment_method) {
+        this.payment_method = payment_method;
+    }
 
     public DiningTable getTable() {
         return table;
@@ -28,8 +73,6 @@ public class Order {
     public void setTable(DiningTable table) {
         this.table = table;
     }
-    
-    
 
     public int getId() {
         return id;
@@ -63,11 +106,11 @@ public class Order {
         this.status = status;
     }
 
-    public String getOrder_datetime() {
+    public Date getOrder_datetime() {
         return order_datetime;
     }
 
-    public void setOrder_datetime(String order_datetime) {
+    public void setOrder_datetime(Date order_datetime) {
         this.order_datetime = order_datetime;
     }
 
@@ -86,19 +129,8 @@ public class Order {
     public void setCustomer(User customer) {
         this.customer = customer;
     }
-    
-    
 
     public Order() {
     }
 
-    public Order(int id, int customer_id, int table_id, String status, String order_datetime, int total_cost) {
-        this.id = id;
-        this.customer_id = customer_id;
-        this.table_id = table_id;
-        this.status = status;
-        this.order_datetime = order_datetime;
-        this.total_cost = total_cost;
-    }
-    
 }

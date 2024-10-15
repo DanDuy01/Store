@@ -49,26 +49,36 @@ public class CartContactController extends HttpServlet {
         } else {
             int user_id = u.getUserId();
             String is_takeaway = request.getParameter("is_takeaway");
+
+            // ăn tại quán
             if (is_takeaway != null && is_takeaway.equals("false")) {
+                String table_str = request.getParameter("table_id");
+                int table_id = Integer.parseInt(table_str);
                 List<Cart> listCart = cd.getCartInfoByUserId(user_id, is_takeaway);
 
                 int sum = 0;
                 for (Cart c : listCart) {
                     sum += c.getTotal_cost();
                 }
-                int order_id = od.createNewOrder(sum, listCart.get(0).getCustomer().getFullName(), listCart.get(0).getCustomer().getEmail(),
-                        listCart.get(0).getCustomer().getPhone(), listCart.get(0).getCustomer().getAddress(), user_id, "", "cod", listCart.get(0).getTable_id());
-                odd.addCartToOrder(listCart, order_id);
+
+                Order existedOrder = od.getOrderByTalbeAndUser(user_id, table_id);
+                if (existedOrder != null) {
+                    odd.addCartToOrder(listCart, existedOrder.getId());
+                } else {
+                    int order_id = od.createNewOrder(sum, listCart.get(0).getCustomer().getFullName(), listCart.get(0).getCustomer().getEmail(),
+                            listCart.get(0).getCustomer().getPhone(), listCart.get(0).getCustomer().getAddress(), user_id, "", "cod", listCart.get(0).getTable_id());
+                    odd.addCartToOrder(listCart, order_id);
+                }
                 cd.deleteCartByUserId(user_id, listCart.get(0).getTable_id());
                 int totalItem = cd.getTotalItemInCart(user_id);
                 session.setAttribute("totalItem", totalItem);
                 ITableDAO it = new TableDAOImpl();
-                Order o = od.getCurrentOrder(user_id, "false");
+                Cart o = cd.checkCart(user_id);
                 if (o != null) {
                     DiningTable table = o.getTable();
                     session.setAttribute("tb", table);
                 } else {
-                    List<DiningTable> tables = it.getAvalableTables();
+                    List<DiningTable> tables = it.getAllTable();
                     session.setAttribute("tables", tables);
                 }
                 session.setAttribute("noti", "Gọi món thành công, hãy chờ chúng tôi xác nhận");
@@ -80,6 +90,7 @@ public class CartContactController extends HttpServlet {
                     for (Cart o : listCart) {
                         sum += o.getTotal_cost();
                     }
+                    session.setAttribute("take_away", 1);
                     session.setAttribute("sum", sum);
                     session.setAttribute("historyUrl", "cartinfo");
                     session.setAttribute("listCart", listCart);

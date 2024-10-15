@@ -259,7 +259,7 @@
                                             <li class="cart-total">Tổng tiền thanh toán <span>${sum} VNĐ</span></li>
                                         </ul>
                                         <div  class="proceed-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                            <a   id="checkoutLink" href="cartcontact?is_takeaway=${is_takeaway}" style="color: white">Tiến hành đặt</a>
+                                            <a   id="checkoutLink" href="cartcontact?is_takeaway=${is_takeaway}&table_id=${table.id}" style="color: white">Tiến hành đặt</a>
                                         </div>
                                     </div>
                                 </div>

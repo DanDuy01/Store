@@ -9,7 +9,6 @@
         <link rel="stylesheet" href="./assets/css/style.css">
         <link rel="stylesheet" href="./assets/css/style_1.css">
         <link rel="stylesheet" href="./assets/css/styles.css">
-
         <link rel="stylesheet" href="./assets/fonts/themify-icons/themify-icons.css">        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -296,17 +295,18 @@
         <!-- Feedback List -->
         <c:if test="${productFeedbacks.size() == 0}">
             <h3 style="text-align: center; font-style: oblique;">Không có đánh giá </h3>
-        </c:if>           
+        </c:if>   
+        <c:if test="${sessionScope.user.getRole() eq 'user'}">
+            <a data-toggle="modal" data-dismiss="modal" data-target="#review_modal">
+                <button type="button" class="btn btn-info float-right marketing_feedback_margin marketing_feedbac_displayinline">Đánh giá của bạn</button>
+            </a>
+        </c:if>
         <c:if test="${productFeedbacks.size() > 0}">
             <div style="background-color:#F8F8FF;">
                 <hr class="marketing_feedback_margin">
                 <span><h2 class="marketing_feedback_margin marketing_feedbac_displayinline">${totalFeedback} Đánh giá</h2></span>
 
-                <c:if test="${accept.id != null && sessionScope.us.getRole() eq 'user'}">
-                    <a data-toggle="modal" data-dismiss="modal" data-target="#review_modal">
-                        <button type="button" class="btn btn-info float-right marketing_feedback_margin marketing_feedbac_displayinline">Đánh giá của bạn</button>
-                    </a>
-                </c:if>
+
 
                 <hr class="marketing_feedback_margin">
 
@@ -339,7 +339,7 @@
                                         </c:forEach>
                                         <br>
                                         <h6 class="marketing_feedback_margin ">${f.feedback_content}
-                                            <c:if test="${f.user_id == sessionScope.user.id}">
+                                            <c:if test="${f.user_id == sessionScope.user.userId}">
                                                 <a href="delete-feedback?fback_id=${f.fback_id}" class="float-right btn btn-outline-danger">Xóa</a>
                                             </c:if>
                                         </h6>

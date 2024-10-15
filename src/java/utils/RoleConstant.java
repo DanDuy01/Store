@@ -4,13 +4,9 @@
  */
 package utils;
 
-/**
- *
- * @author Relax
- */
 public class RoleConstant {
 
-    public static String STAFF_ROLE = "staff";
     public static String USER_ROLE = "user";
     public static String ADMIN_ROLE = "admin";
+    public static String STAFF_ROLE = "staff";
 }

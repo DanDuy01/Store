@@ -4,21 +4,16 @@
  */
 package models;
 
-/**
- *
- * @author ThinkPro
- */
 public class DiningTable {
-    private int id;
-    private int number;
-    private String capacity;
-    private Boolean is_available;
 
-    public DiningTable(int id, int number, String capacity, Boolean is_available) {
+    private int id;
+    private String name;
+    private String capacity;
+
+    public DiningTable(int id, String number, String capacity) {
         this.id = id;
-        this.number = number;
+        this.name = number;
         this.capacity = capacity;
-        this.is_available = is_available;
     }
 
     public int getId() {
@@ -29,12 +24,12 @@ public class DiningTable {
         this.id = id;
     }
 
-    public int getNumber() {
-        return number;
+    public String getName() {
+        return name;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCapacity() {
@@ -45,13 +40,4 @@ public class DiningTable {
         this.capacity = capacity;
     }
 
-    public Boolean getIs_available() {
-        return is_available;
-    }
-
-    public void setIs_available(Boolean is_available) {
-        this.is_available = is_available;
-    }
-    
-    
 }

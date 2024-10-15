@@ -19,10 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.Image;
 
-/**
- *
- * @author ThinkPro
- */
 public class DishDAOImpl extends context.DBContext implements IDishDAO {
 
     Connection connection = null;
@@ -152,6 +148,76 @@ public class DishDAOImpl extends context.DBContext implements IDishDAO {
             }
         }
 
+        return list;
+    }
+
+    @Override
+    public Dish getDishByID(int product_id) {
+        String query = "select * from Dish where id=?";
+        try {
+            connection = dBContext.openConnection();
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, product_id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Dish d = new Dish();
+                d.setId(rs.getInt("id"));
+                d.setName(rs.getString("name"));
+                d.setBrief_info(rs.getString("brief_info"));
+                d.setDescription(rs.getString("description"));
+                d.setPrice(rs.getInt("price"));
+                d.setIs_available(rs.getBoolean("is_available"));
+                d.setCategory_id(rs.getInt("category_id"));
+                d.setImages(getImagesOfDish(rs.getInt("id")));
+
+                return d;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DishDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DishDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Dish> getRelatedDish(int product_id, int category_id) {
+        List<Dish> list = new ArrayList<>();
+        String query = "select * from Dish where category_id=? and id <> ? ";
+        try {
+            connection = dBContext.openConnection();
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, category_id);
+            ps.setInt(2, product_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Dish d = new Dish();
+                d.setId(rs.getInt("id"));
+                d.setName(rs.getString("name"));
+                d.setBrief_info(rs.getString("brief_info"));
+                d.setDescription(rs.getString("description"));
+                d.setPrice(rs.getInt("price"));
+                d.setIs_available(rs.getBoolean("is_available"));
+                d.setCategory_id(rs.getInt("category_id"));
+                d.setImages(getImagesOfDish(rs.getInt("id")));
+
+                list.add(d);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DishDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DishDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
         return list;
     }
 

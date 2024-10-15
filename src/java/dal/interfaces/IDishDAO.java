@@ -7,10 +7,6 @@ package dal.interfaces;
 import java.util.List;
 import models.Dish;
 
-/**
- *
- * @author ThinkPro
- */
 public interface IDishDAO {
 
     public List<Dish> filterPaging(int index, int record_per_page, String searchKey, String categoryId, String type, String value);
@@ -18,5 +14,9 @@ public interface IDishDAO {
     public int countDishByCondition(String searchKey, String categoryId);
 
     public List<Dish> getAll();
-    
+
+    public Dish getDishByID(int product_id);
+
+    public List<Dish> getRelatedDish(int product_id, int category_id);
+
 }

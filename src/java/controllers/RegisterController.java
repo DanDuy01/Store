@@ -115,7 +115,6 @@ public class RegisterController extends HttpServlet {
             return;
         }
         user.setFullName(fullName);
-        user.setUsername(fullName);        
         user.setAddress(address);
         user.setEmail(email);
         user.setGender(gender);
@@ -146,7 +145,7 @@ public class RegisterController extends HttpServlet {
         int currentTimeInInt = (int) currentTimeMillis;
         user.setUserId(currentTimeInInt);
         String paswordHash = PasswordUtil.hashPassword(password);
-        user.setPassword(paswordHash);        
+        user.setPassword(paswordHash);
         user.setRole(RoleConstant.USER_ROLE);
         ud.registerProfile(user);
 //        session.setAttribute("user", user);

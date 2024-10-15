@@ -1,9 +1,3 @@
-<%-- 
-    Document   : footer
-    Created on : Feb 16, 2023, 2:35:07 PM
-    Author     : ThinkPro
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <section id="info_section" >
     <div class="container">
@@ -13,7 +7,7 @@
                     <h5>
                         <a href="home" class="navbar-brand">
                             <span style="color: whitesmoke; font-weight: bold; font-size: 30px;">
-                                NDT Condoms
+                                SWP Restaurant
                             </span>
                         </a>
                     </h5>
@@ -27,39 +21,21 @@
                     </p>
                     <p>
                         <i class="fa fa-envelope" aria-hidden="true"></i>
-                        truongndhe150878@fpt.edu.vn
+                        swprestaurant@gmail.com
                     </p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="info_links">
-                    <h5>
-                        <b >Useful Link </b>
-                    </h5>
                     <ul>
                         <li>
-                            <a href="home">
+                            <a href="dishes">
                                 Home
                             </a>
                         </li>
                         <li>
                             <a href="contact">
                                 About
-                            </a>
-                        </li>
-                        <li>
-                            <a href="list-product">
-                                Products
-                            </a>
-                        </li>
-                        <li>
-                            <a href="list-service">
-                                Services
-                            </a>
-                        </li>
-                        <li>
-                            <a href="list-blog">
-                                Blogs
                             </a>
                         </li>
                     </ul>
@@ -94,7 +70,7 @@
 <footer class="footer_section">
     <div class="container">
         <p>
-            &copy; <span id="displayYear">2023</span> 
+            &copy; <span id="displayYear">2024</span> 
         </p>
     </div>
 </footer>

@@ -17,11 +17,11 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <title>Restaurant</title>
         <%@include file="../component/javascript.jsp" %>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
         <style>
-
-
-
             li.nav-item a.active{
                 color: blue;
                 font-weight: bold;
@@ -79,7 +79,6 @@
         <div id="main">
 
             <%@include file="../component/header.jsp" %>
-            <%@include file="../component/account.jsp" %>
 
             <div class="container-fluid" style="margin-top: 100px ">
                 <div class="row">
@@ -156,16 +155,17 @@
                                     <div class="row">
                                         <div class="product-item" style="background-color: white;  border-radius: 10px;  box-shadow: 0 0 10px rgb(0 0 0);   text-align: center;">                  
                                             <div class="product-top"  style="margin-top: 10px">
-                                                <a  href="dishes?id=${p.id}&cid=${p.category_id}" class="product-thumb">
+                                                <a  href="dish-details?id=${p.id}&cid=${p.category_id}" class="product-thumb">
                                                     <img data-toggle="modal" data-target="#" style="height: 250px;
                                                          width: 250px;" src="${p.images.get(0).getUrl()}" alt="">
                                                 </a>
                                                 <c:if test="${sessionScope.user == null}" >
-                                                    <a style="cursor: pointer;" class="buy-now" data-toggle="modal"  data-target="#loginModal" style="color: white">Đặt ngay</a>
+                                                    <a style="cursor: pointer;" class="buy-now" href="/SWP/login" style="color: white">Đặt ngay</a>
                                                 </c:if>
                                                 <c:if test="${sessionScope.user != null and sessionScope.user.getRole() eq 'user'}" >
-                                                    <a style="cursor: pointer;" href="addcart?id=${p.id}" class="buy-now" >Đặt ngay</a>
+                                                    <a style="cursor: pointer;" onclick="showOrderModal(${p.id}, '${p.name}', ${p.price}, '${p.images.get(0).getUrl()}')" class="buy-now">Đặt ngay</a>
                                                 </c:if>
+
                                             </div>
                                             <div class="product-infor">
                                                 <div style="height: 100px; ">
@@ -218,11 +218,108 @@
         </div>
 
     </div>
+    <%@include file="../component/footer.jsp" %>
     <script>
         function clearInput() {
             document.getElementById("myInput1").value = "";
         }
+
     </script>
+
+    <!-- Modal -->
+    <form action="carts" method="post">
+        <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderModalLabel">Thông tin đặt hàng</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <input id="modalId" type="hidden" name="product_id"/>
+                    <div class="modal-body">
+                        <!-- Nội dung modal -->
+                        <div class="modal-img">
+                            <img id="modalImage" src="" alt="Hình ảnh món ăn" style="width: 300px; height: 200px;">
+                        </div>
+                        <div class="modal-info">
+                            <h3 id="modalName"></h3>
+                            <p id="modalPrice" style="color:red"></p>
+                            <div class="modal-quantity">
+                                <label for="quantity">Số lượng:</label>
+                                <input type="number" id="quantity" name="quantity" value="1" min="1" onchange="calculateTotalPrice()">
+                            </div>
+                            <div class="modal-table">
+                                <label for="table">Chọn bàn:</label>
+                                <select id="table" name="table">
+                                    <optgroup label="Lựa chọn khác">
+                                        <option value="-1">Đặt tới địa chỉ cụ thể</option>
+                                    </optgroup>
+                                    <c:choose>
+                                        <c:when test="${not empty sessionScope.tb}">
+                                            <optgroup label="Bàn hiện tại của bạn">
+                                                <option value="${sessionScope.tb.id}">${sessionScope.tb.name} (Sức chứa: ${sessionScope.tb.capacity})</option>
+                                            </optgroup>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <optgroup label="Chọn bàn">
+                                                <c:forEach var="table" items="${sessionScope.tables}">
+                                                    <option value="${table.id}">${table.name} (Sức chứa: ${table.capacity})</option>
+                                                </c:forEach>
+                                            </optgroup>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </select>
+
+                            </div>
+                            <!-- Tổng giá -->
+                            <div class="modal-total-price">
+                                <label for="totalPrice">Tổng giá:</label>
+                                <span id="totalPrice" style="font-weight: bold; color: green;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button  type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
+                    </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <script>
+            let price = 0; // Biến lưu giá của món ăn
+
+            function showOrderModal(id, name, priceValue, imageUrl) {
+                // Gán các giá trị vào modal
+                document.getElementById('modalId').value = id;
+                document.getElementById('modalImage').src = imageUrl;
+                document.getElementById('modalName').innerText = name;
+                document.getElementById('modalPrice').innerText = priceValue + 'đ';
+                price = priceValue; // Lưu giá vào biến toàn cục
+                document.getElementById('quantity').value = 1; // Đặt lại số lượng mặc định là 1
+                calculateTotalPrice(); // Tính tổng giá ban đầu khi mở modal
+
+                // Mở modal
+                $('#orderModal').modal('show');
+            }
+
+            function calculateTotalPrice() {
+                // Lấy số lượng từ input
+                const quantity = document.getElementById('quantity').value;
+
+                // Tính tổng giá
+                const totalPrice = price * quantity;
+
+                // Hiển thị tổng giá
+                document.getElementById('totalPrice').innerText = totalPrice + 'đ';
+            }
+        </script>
+
+
 </body>
 </html>
 

@@ -5,14 +5,9 @@
 package controllers;
 
 import dal.implement.CartDAOImpl;
-import dal.implement.OrderDAOImpl;
-import dal.implement.TableDAOImpl;
-import dal.implement.UserDAOImpl;
+import dal.implement.DishDAOImpl;
 import dal.interfaces.ICartDAO;
-import dal.interfaces.IOrderDAO;
-import dal.interfaces.ITableDAO;
-
-import dal.interfaces.IUserDAO;
+import dal.interfaces.IDishDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,15 +15,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 import models.Cart;
-import models.DiningTable;
-import models.Order;
+import models.Dish;
 import models.User;
-import utils.PasswordUtil;
-import utils.RoleConstant;
 
-public class LoginController extends HttpServlet {
+public class CartsController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,10 +38,10 @@ public class LoginController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");
+            out.println("<title>Servlet CartsController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CartsController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,8 +59,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-        request.getRequestDispatcher("./views/login.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -83,41 +73,51 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String productId_raw = request.getParameter("product_id");
+        int product_id = Integer.parseInt(productId_raw);
         HttpSession session = request.getSession();
-        String email = request.getParameter("email").trim();
-        String password = request.getParameter("password").trim();
-        IUserDAO ud = new UserDAOImpl();
-        String paswordHash = PasswordUtil.hashPassword(password);
-        User user = ud.login(email, paswordHash);
-        if (user == null) {
-            session.setAttribute("notification", "Invalid username or password or role. Try again!");
-            session.setAttribute("typeNoti", "alert-danger");
-            response.sendRedirect("login");
+        User u = (User) session.getAttribute("user");
+
+        if (u == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
         } else {
-            session.setAttribute("user", user);
-            if (user.getRole().equalsIgnoreCase(RoleConstant.ADMIN_ROLE) || user.getRole().equalsIgnoreCase(RoleConstant.STAFF_ROLE)) {
-                response.sendRedirect(request.getContextPath() + "/admin-dashboard");
-            } else if (user.getRole().equalsIgnoreCase(RoleConstant.USER_ROLE)) {
-                ICartDAO cd = new CartDAOImpl();
-                IOrderDAO od = new OrderDAOImpl();
-                int totalItem = cd.getTotalItemInCart(user.getUserId());
-                session.setAttribute("totalItem", totalItem);
-                ITableDAO it = new TableDAOImpl();
-                Order o = od.getCurrentOrder(user.getUserId(), "false");
-                if (o != null) {
-                    DiningTable table = o.getTable();
-                    session.setAttribute("tb", table);
-                } else {
-                    List<DiningTable> tables = it.getAvalableTables();
-                    session.setAttribute("tables", tables);
-                }
-                String url = (String) session.getAttribute("historyUrl");
-                if (url == null || url.isEmpty()) {
-                    response.sendRedirect(request.getContextPath() + "/dishes");
-                } else {
-                    response.sendRedirect(url);
-                }
+            String table_raw = request.getParameter("table");
+            int table = -1;
+            if (table_raw != null) {
+                table = Integer.parseInt(table_raw);
             }
+            int user_id = u.getUserId();
+            ICartDAO cd = new CartDAOImpl();
+            Cart c = cd.checkCart(user_id, product_id, table);
+
+            int quantity = 1;
+            String quantity_raw = request.getParameter("quantity");
+
+            if (quantity_raw != null) {
+                quantity = Integer.parseInt(quantity_raw);
+            }
+
+            int total_cost;
+            IDishDAO pd = new DishDAOImpl();
+            Dish p = pd.getDishByID(product_id);
+            if (c == null) {
+                int price = p.getPrice();
+                if (p.getPrice() != 0) {
+                    price = p.getPrice();
+                }
+                total_cost = quantity * price;
+                cd.addToCart(product_id, table, quantity, total_cost, user_id);
+            } else {
+                quantity += c.getQuantity();
+                total_cost = c.getTotal_cost() + quantity * p.getPrice();
+                cd.updateQuantityProductInCart(product_id, table, quantity, total_cost, user_id);
+            }
+            int totalItem = cd.getTotalItemInCart(u.getUserId());
+
+            session.setAttribute("totalItem", totalItem);
+            String historyUrl = (String) session.getAttribute("historyUrl");
+            session.setAttribute("noti", "Thêm thành công vào giỏ hàng.");
+            response.sendRedirect(historyUrl);
         }
     }
 

@@ -27,9 +27,10 @@
 
         <div class="main-wrapper">
             <%@include file="../component/header.jsp" %>
-            <c:if test="${sessionScope.user.getRole() eq 'admin'}">
-                <%@include file="headmasterLeftboard.jsp" %>
+            <c:if test="${sessionScope.user.getRole() eq 'admin' or sessionScope.user.getRole() eq 'staff'}">
+                <%@include file="leftboard.jsp" %>
             </c:if>
+
             <c:if test="${sessionScope.user.getRole() eq 'user'}">
                 <div class="page-wrapper">
                     <div class="content container-fluid">

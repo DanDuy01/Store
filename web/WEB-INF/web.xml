@@ -24,6 +24,34 @@
         <servlet-name>DishController</servlet-name>
         <servlet-class>controllers.DishesController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DishDetailsController</servlet-name>
+        <servlet-class>controllers.DishDetailsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartsController</servlet-name>
+        <servlet-class>controllers.CartsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartInfoController</servlet-name>
+        <servlet-class>controllers.CartInfoController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCartController</servlet-name>
+        <servlet-class>controllers.DeleteCartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCartController</servlet-name>
+        <servlet-class>controllers.UpdateCartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartContactController</servlet-name>
+        <servlet-class>controllers.CartContactController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrdersController</servlet-name>
+        <servlet-class>controllers.OrdersController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -34,7 +62,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminDashBoardController</servlet-name>
-        <url-pattern>/dashboard</url-pattern>
+        <url-pattern>/admin-dashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ProfileController</servlet-name>
@@ -44,10 +72,37 @@
         <servlet-name>RegisterController</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
-   
     <servlet-mapping>
         <servlet-name>DishController</servlet-name>
         <url-pattern>/dishes</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DishDetailsController</servlet-name>
+        <url-pattern>/dish-details</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartsController</servlet-name>
+        <url-pattern>/carts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartInfoController</servlet-name>
+        <url-pattern>/cartinfo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCartController</servlet-name>
+        <url-pattern>/deletecart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCartController</servlet-name>
+        <url-pattern>/updatecart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartContactController</servlet-name>
+        <url-pattern>/cartcontact</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrdersController</servlet-name>
+        <url-pattern>/orders</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

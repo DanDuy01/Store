@@ -16,10 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.User;
 
-/**
- *
- * @author ThinkPro
- */
 public class UserDAOImpl extends context.DBContext implements IUserDAO {
 
     Connection connection = null;
@@ -32,17 +28,17 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String sql = "SELECT * FROM [User] WHERE email like ? AND password = ? AND active = 1";
+        String sql = "SELECT * FROM [User] WHERE (email like ? or phone like ?) AND password = ? AND active = 1";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
-            ps.setString(2, passWord);            
+            ps.setString(2, email);
+            ps.setString(3, passWord);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 User user = new User();
                 user.setUserId(rs.getInt("userId"));
-                user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setFullName(rs.getString("fullName"));
                 user.setDob(rs.getDate("dob"));
@@ -126,8 +122,6 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
 
     }
 
-    
-
     @Override
     public int SaveUser(String action, User user) {
         int numberOfChange = 0;
@@ -138,7 +132,7 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
         }
         String sql = "";
         if (action.equals("add")) {
-            sql = "Insert into [User](fullName,gender,dob,phone,address,username, password, email, role, active) values(?,?,?,?,?,?,?,?,?,?);";
+            sql = "Insert into [User](fullName,gender,dob,phone,address, password, email, role, active) values(?,?,?,?,?,?,?,?,?);";
         } else {
             sql = "Update [User] set fullName = ?, gender=?, dob = ?, phone = ?, address = ?, email = ? where userId = ?";
         }
@@ -153,9 +147,8 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
             st.setString(++count, user.getAddress());
             st.setString(++count, user.getEmail());
             if (action.equals("edit")) {
-               
+
             } else {
-                st.setString(++count, user.getUsername());
                 st.setString(++count, user.getPassword());
                 st.setString(++count, user.getRole());
                 st.setBoolean(++count, user.isActive());
@@ -198,7 +191,6 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
             if (rs.next()) {
                 User user = new User();
                 user.setUserId(rs.getInt("userId"));
-                user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setFullName(rs.getString("fullName"));
                 user.setDob(rs.getDate("dob"));
@@ -259,7 +251,6 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
             if (rs.next()) {
                 user = new User();
                 user.setUserId(rs.getInt("userId"));
-                user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setFullName(rs.getString("fullName"));
                 user.setDob(rs.getDate("dob"));
@@ -282,7 +273,7 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
         }
         return user;
     }
-    
+
     @Override
     public void registerProfile(User user) {
         try {
@@ -290,15 +281,12 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        String sql = "UPDATE [User] SET fullName = ?, dob = ?, gender = ?, avatar = ?, phone = ?, email = ?, address = ? WHERE userId = ?";
-        String sql = "INSERT INTO [User] (userId,username, password, fullName, dob, gender, avatar, phone, email, address, role, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
+        String sql = "INSERT INTO [User] (password, fullName, dob, gender, avatar, phone, email, address, role, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, user.getUserId());
-            int count = 1;
-            st.setString(++count, user.getUsername());
-            st.setString(++count, user.getPassword());            
+            int count = 0;
+            st.setString(++count, user.getPassword());
             st.setString(++count, user.getFullName());
             st.setDate(++count, user.getDob());
             st.setString(++count, user.getGender());
@@ -307,7 +295,7 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
             st.setString(++count, user.getEmail());
             st.setString(++count, user.getAddress());
             st.setString(++count, user.getRole());
-            st.setBoolean(++count,true);
+            st.setBoolean(++count, true);
             st.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);

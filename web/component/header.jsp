@@ -37,13 +37,21 @@
     }
 
 </style>
+<c:if test="${sessionScope.noti !=null}">
+    <div class="alert ${noti.toLowerCase().contains("thành công") ? "alert-success" : "alert-danger"} alert-dismissible fade show " role="alert" style=" position: fixed; z-index: 15 ; margin-left: 80%; margin-top: 5%;">
+        <strong>${noti}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <c:remove var="noti" scope="session" />
+
+</c:if>
 <div id="header">
     <nav class="navbar navbar-expand-lg navbar-header bg-body">
         <div class="container-fluid">
             <nav class="navbar navbar-light bg-light">
-                <a class="navbar-brand" href="dishes">
+                <a class="navbar-brand" href="dishes" style="font-size:20px">
                     <img src="./images/logo.png" width="50" height="50" class="d-inline-block align-top" alt="">
-                    SWP Restaurant
+                    <b>SWP Restaurant</b>
                 </a>
             </nav>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,14 +60,19 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Căn giữa phần điều hướng -->
-                <nav class="mx-auto">
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link ${active == 1 ? 'active' : ''}" data-toggle="link" href="dishes" role="tab" aria-controls="nav-home" aria-selected="true"><b>Menu</b></a>
-                        &nbsp; &nbsp;
-                        <button data-toggle="modal" data-target="#contactModal" class="nav-item nav-link ms-5" aria-controls="nav-contact" aria-selected="false"><b>Liên hệ</b></button>
-                    </div>
-                </nav>
-
+                <c:if test="${sessionScope.user == null or sessionScope.user.getRole() eq 'user'}">
+                    <nav class="mx-auto">
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link ${active == 1 ? 'active' : ''}"
+                               data-toggle="link" href="dishes" role="tab" 
+                               aria-controls="nav-home" aria-selected="true" style="font-size: 15px"><b>Menu</b></a>
+                            &nbsp; &nbsp;
+                            <button data-toggle="modal" data-target="#contactModal" 
+                                    class="nav-item nav-link" aria-controls="nav-contact" 
+                                    aria-selected="false" style="font-size: 15px"><b>Liên hệ</b></button>
+                        </div>
+                    </nav>
+                </c:if>
                 <!-- Đẩy phần navbar-nav sang phải -->
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
                     <c:if test="${sessionScope.user != null}">
@@ -90,7 +103,7 @@
                     </c:if>
                     <c:if test="${sessionScope.user ne null and sessionScope.user.getRole() eq 'user'}">
                         <li class="nav-item">
-                            <a class="nav-link btn btn-icon py-2 px-4" href="cartinfo" tabindex="-1" aria-disabled="true">
+                            <a class="nav-link btn btn-icon py-2 px-4" href="cartinfo?is_takeaway=true" tabindex="-1" aria-disabled="true">
                                 <i class="ti-shopping-cart"></i> 
                                 <c:if test="${sessionScope.totalItem > 0}">
                                     <span style="background: blue;" class="item-numb">${sessionScope.totalItem}</span>
@@ -105,7 +118,15 @@
 </div>
 
 
-
+<script>
+    if (document.querySelector('.alert')) {
+        document.querySelectorAll('.alert').forEach(function ($el) {
+            setTimeout(() => {
+                $el.classList.remove('show');
+            }, 3000);
+        });
+    }
+</script>
 
 <!-- contact modal -->
 <div class="modal fade col-md-12 text-center" role="dialog" id="contactModal">

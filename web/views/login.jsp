@@ -37,7 +37,7 @@
                                 <p class="account-subtitle">Access to Restaurant system</p>
                                 <form action="login" method="post">
                                     <div class="form-group">
-                                        <input name="email" class="form-control" type="email" placeholder="email">
+                                        <input name="email" class="form-control" type="text" placeholder="email">
                                     </div>
                                     <div class="form-group">
                                         <input name="password" class="form-control" type="password" placeholder="password">

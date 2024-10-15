@@ -4,16 +4,22 @@
  */
 package controllers;
 
+import dal.implement.CartDAOImpl;
+import dal.implement.DishDAOImpl;
+import dal.interfaces.ICartDAO;
+import dal.interfaces.IDishDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import models.Cart;
+import models.Dish;
+import models.User;
 
-@WebServlet(name = "HeadmasterDashboardController", urlPatterns = {"/headmaster/dashboard"})
-public class AdminDashboardController extends HttpServlet {
+public class UpdateCartController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -27,17 +33,31 @@ public class AdminDashboardController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet HeadmasterDashboardController</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet HeadmasterDashboardController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String productId_raw = request.getParameter("product_id");
+        int product_id = Integer.parseInt(productId_raw);
+        String quantity_raw = request.getParameter("quantity");
+        System.out.println("quantity: " + quantity_raw);
+        int quantity = Integer.parseInt(quantity_raw);
+        HttpSession session = request.getSession();
+        User u = (User) session.getAttribute("user");
+        if (u == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+        } else {
+            IDishDAO dd = new DishDAOImpl();
+            Dish d = dd.getDishByID(product_id);
+            int total = 0;
+            String table_raw = request.getParameter("table_id");
+            int table_id = Integer.parseInt(table_raw);
+
+            ICartDAO cd = new CartDAOImpl();
+            Cart c = cd.getCartByUserIdAndDishId(u.getUserId(), product_id);
+            if (c != null) {
+                int sum = quantity * d.getPrice();
+                cd.updateQuantityProductInCart(product_id, table_id, quantity, sum, u.getUserId());
+            }
+            int totalItem = cd.getTotalItemInCart(u.getUserId());
+            session.setAttribute("totalItem", totalItem);
+            response.sendRedirect(request.getContextPath() + "/cartinfo?is_takeaway=" + (table_id == -1 ? "true" : "false"));
         }
     }
 
@@ -53,7 +73,7 @@ public class AdminDashboardController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("./views/dashboard.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**

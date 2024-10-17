@@ -4,31 +4,29 @@
  */
 package controllers;
 
-import dal.implement.CartDAOImpl;
-import dal.implement.OrderDAOImpl;
-import dal.implement.TableDAOImpl;
-import dal.implement.UserDAOImpl;
-import dal.interfaces.ICartDAO;
-import dal.interfaces.IOrderDAO;
-import dal.interfaces.ITableDAO;
-
-import dal.interfaces.IUserDAO;
+import dal.implement.FeedbackDAOImpl;
+import dal.interfaces.IFeedbackDAO;
+import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import models.Cart;
-import models.DiningTable;
-import models.Order;
+import jakarta.servlet.http.Part;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.Base64;
 import models.User;
-import utils.PasswordUtil;
-import utils.RoleConstant;
 
-public class LoginController extends HttpServlet {
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // 2 MB
+        maxFileSize = 1024 * 1024 * 10, // 10 MB
+        maxRequestSize = 1024 * 1024 * 50 // 50 MB
+)
+public class AddFeedbackController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,10 +45,10 @@ public class LoginController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");
+            out.println("<title>Servlet AddFeedbackController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddFeedbackController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,8 +66,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-        request.getRequestDispatcher("./views/login.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -84,41 +81,29 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String email = request.getParameter("email").trim();
-        String password = request.getParameter("password").trim();
-        IUserDAO ud = new UserDAOImpl();
-        String paswordHash = PasswordUtil.hashPassword(password);
-        User user = ud.login(email, paswordHash);
-        if (user == null) {
-            session.setAttribute("notification", "Invalid username or password or role. Try again!");
-            session.setAttribute("typeNoti", "alert-danger");
-            response.sendRedirect("login");
-        } else {
-            session.setAttribute("user", user);
-            if (user.getRole().equalsIgnoreCase(RoleConstant.ADMIN_ROLE) || user.getRole().equalsIgnoreCase(RoleConstant.STAFF_ROLE)) {
-                response.sendRedirect(request.getContextPath() + "/admin-dashboard");
-            } else if (user.getRole().equalsIgnoreCase(RoleConstant.USER_ROLE)) {
-                ICartDAO cd = new CartDAOImpl();
-                IOrderDAO od = new OrderDAOImpl();
-                List<Cart> totalItem = cd.getCartInfoByUserId(user.getUserId());
-                session.setAttribute("totalItem", totalItem.size());
-                ITableDAO it = new TableDAOImpl();
-                Cart c = cd.checkCart(user.getUserId());
-                if (c != null) {
-                    DiningTable table = c.getTable();
-                    session.setAttribute("tb", table);
-                } else {
-                    List<DiningTable> tables = it.getAllTable();
-                    session.setAttribute("tables", tables);
-                }
-                String url = (String) session.getAttribute("historyUrl");
-                if (url == null || url.isEmpty()) {
-                    response.sendRedirect(request.getContextPath() + "/dishes");
-                } else {
-                    response.sendRedirect(url);
-                }
-            }
+        IFeedbackDAO fed = new FeedbackDAOImpl();
+        User u = (User) session.getAttribute("user");
+        int product_id = Integer.parseInt(request.getParameter("product_id"));
+        String feedback_content = request.getParameter("feedback_content").trim();
+        String rating = request.getParameter("rating");
+        // Lấy tệp hình ảnh từ yêu cầu
+        Part filePart = request.getPart("image");
+        String base64Image = "";
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // Lấy tên tệp
+
+        int star = Integer.parseInt(rating);
+
+        InputStream imageStream = filePart.getInputStream();
+        byte[] imageBytes = IOUtils.toByteArray(imageStream);
+
+        if (fileName != null && !fileName.isEmpty()) {
+            base64Image = Base64.getEncoder().encodeToString(imageBytes);
         }
+
+        fed.addNewFeedback(u.getFullName(), star, feedback_content, base64Image.length() > 0 ? "data:image/png;base64," + base64Image : "",
+                product_id, u.getUserId(), u.getAvatar());
+        String historyUrl = (String) session.getAttribute("historyUrl");
+        response.sendRedirect(historyUrl);
     }
 
     /**

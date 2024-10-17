@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Admin Manage</title>
+        <title>Management</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -30,95 +30,69 @@
                 border-radius: 5px;
             }
         </style>
+        <style>
+            li.nav-item a.active{
+                color: blue;
+                font-weight: bold;
+            }
+            li.nav-item a{
+                color: black;
+            }
+            .form-select option{
+                background-color: transparent;
+            }
+
+            .input-container {
+                position: relative;
+                display: inline-block;
+            }
+
+            .input-container input[type="text"] {
+                padding-right: 30px;
+            }
+
+            .clear-icon {
+                position: absolute;
+                top: 50%;
+                color: red;
+                right: 10px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                display: none;
+            }
+
+            .input-container:hover .clear-icon {
+                display: block;
+            }
+
+            .product-item {
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgb(0 0 0);
+                text-align: center;
+            }
+
+            .product-thumb {
+                width: 180px;
+                height: 250px;
+            }
+
+            .product-name {
+                /* You can adjust the font size as needed */
+                font-size: 14px;
+                /* You can add additional styles if needed */
+            }
+        </style>
     </head>
     <body class="sb-nav-fixed">
-        <%@include file="../component/header.jsp" %>
-        <div id="layoutSidenav">
-            <%@include file="leftboard.jsp" %>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h2 class="mt-4 text-center mb-4">Thống kê</h2>
-                        <div class="row numberStatistic">
-                            <div class="col-xl-3 col-lg-4 col-md-4 mt-4">
-                                <div class="card features feature-primary rounded border-0 shadow p-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon text-center rounded-md">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                        <div class="flex-1 ms-2">
-                                            <h5 class="mb-0">${noCustomer}</h5>
-                                            <p class="text-muted mb-0">Customer</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!--end col-->
-
-                            <div class="col-xl-3 col-lg-4 col-md-4 mt-4">
-                                <div class="card features feature-primary rounded border-0 shadow p-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon text-center rounded-md">
-                                            <i class="ti ti-dropbox-alt"></i>
-                                        </div>
-                                        <div class="flex-1 ms-2">
-                                            <h5 class="mb-0">${noProduct}</h5>
-                                            <p class="text-muted mb-0">Product</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!--end col-->
-
-                            <div class="col-xl-3 col-lg-4 col-md-4 mt-4">
-                                <div class="card features feature-primary rounded border-0 shadow p-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon text-center rounded-md">
-                                            <i class="fa fa-users"></i>
-                                        </div>
-                                        <div class="flex-1 ms-2">
-                                            <h5 class="mb-0">${noStaff}</h5>
-                                            <p class="text-muted mb-0">Staffs</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!--end col-->                     
-                        </div>
-                        <br>
-
-                        <div class="dateFromTo">
-                            <form action="admin-manage" onsubmit="return checkDate()">
-                                Từ: 
-                                <input class="" type="date" id="start" name="start" value="${start}">
-                                Đến: 
-                                <input type="date" id="end" name="end" value="${end}">
-                                <input class="ml-4 btn btn-primary" type="submit" value="Thống kê"/>
-                            </form>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-pie me-1"></i>
-                                        Thống kê đơn hàng
-                                    </div>                               
-                                    <div class="card-body">
-                                        <canvas id="myPieChartAdminCustomers" width="100%" height="40"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-
-                           
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        Thống kê doanh thu
-                                    </div>
-                                    <div class="card-body"><canvas id="myAreaChart-1" width="100%" height="40"></canvas></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+        <div id="main">
+            <%@include file="../component/header.jsp" %>
+            <div class="container-fluid" style="margin-top: 100px ">
+                <div class="row">
+                    <h1 style="text-align: center;">Management screen</h1>
+                    <!--leftboard-->
+                    <%@include file="../views/left.jsp" %>
+                </div>
             </div>
         </div>
         <script>

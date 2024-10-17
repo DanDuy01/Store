@@ -73,4 +73,30 @@ public class TableDAOImpl extends DBContext implements ITableDAO {
         return null;
     }
 
+    @Override
+    public List<DiningTable> getAllTable() {
+        List<DiningTable> list = new ArrayList();
+        try {
+            connection = dBContext.openConnection();
+            String sql = "SELECT * "
+                    + "FROM DiningTable ";
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(new DiningTable(rs.getInt("id"), rs.getString("name"), rs.getString("capacity")));
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+                Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return list;
+    }
+
 }

@@ -7,9 +7,11 @@ package controllers;
 import dal.implement.CartDAOImpl;
 import dal.implement.OrderDAOImpl;
 import dal.implement.OrderDetailDAOImpl;
+import dal.implement.TableDAOImpl;
 import dal.interfaces.ICartDAO;
 import dal.interfaces.IOrderDAO;
 import dal.interfaces.IOrderDetailDAO;
+import dal.interfaces.ITableDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -19,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import models.Cart;
+import models.DiningTable;
 import models.User;
 
 public class OrdersController extends HttpServlet {
@@ -67,6 +70,15 @@ public class OrdersController extends HttpServlet {
                             phone, address, user_id, note, "cod", table);
                     odd.addCartToOrder(listCart, order_id);
                     cd.deleteCartByUserId(user_id, table);
+                    ITableDAO it = new TableDAOImpl();
+                    Cart o = cd.checkCart(user_id);
+                    if (o != null) {
+                        DiningTable t = o.getTable();
+                        session.setAttribute("tb", t);
+                    } else {
+                        List<DiningTable> tables = it.getAllTable();
+                        session.setAttribute("tables", tables);
+                    }
                     int totalItem = cd.getTotalItemInCart(user_id);
                     session.setAttribute("totalItem", totalItem);
                     session.setAttribute("noti", "Đặt hàng thành công, hãy chờ chúng tôi xác nhận");

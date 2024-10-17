@@ -12,4 +12,6 @@ public interface ITableDAO {
     List<DiningTable> getAvalableTables();
 
     public DiningTable getTableById(int aInt);
+
+    public List<DiningTable> getAllTable();
 }

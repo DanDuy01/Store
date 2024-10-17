@@ -4,31 +4,20 @@
  */
 package controllers;
 
-import dal.implement.CartDAOImpl;
 import dal.implement.OrderDAOImpl;
-import dal.implement.TableDAOImpl;
-import dal.implement.UserDAOImpl;
-import dal.interfaces.ICartDAO;
 import dal.interfaces.IOrderDAO;
-import dal.interfaces.ITableDAO;
-
-import dal.interfaces.IUserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import models.Cart;
-import models.DiningTable;
 import models.Order;
-import models.User;
-import utils.PasswordUtil;
-import utils.RoleConstant;
 
-public class LoginController extends HttpServlet {
+@WebServlet(name = "UpdateOrderController", urlPatterns = {"/update-order"})
+public class UpdateOrderController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,10 +36,10 @@ public class LoginController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");
+            out.println("<title>Servlet UpdateOrder</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet UpdateOrder at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,8 +57,19 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
-        request.getRequestDispatcher("./views/login.jsp").forward(request, response);
+        String status = request.getParameter("status");
+        int order_id = Integer.parseInt(request.getParameter("order_id"));
+        IOrderDAO od = new OrderDAOImpl();
+
+        Boolean b = od.handleOrder(status, order_id);
+        HttpSession ses = request.getSession();
+        int take_away = (int) ses.getAttribute("take_away");
+        if (b) {
+            ses.setAttribute("noti", "Xử lý đơn hàng " + order_id + " thành công.");
+        } else {
+            ses.setAttribute("noti", "Xử lý đơn hàng " + order_id + " thất bại. hãy kiểm tra lại");
+        }
+        response.sendRedirect(request.getContextPath() + "/manageorder?take_away=" + take_away);
     }
 
     /**
@@ -83,42 +83,18 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String email = request.getParameter("email").trim();
-        String password = request.getParameter("password").trim();
-        IUserDAO ud = new UserDAOImpl();
-        String paswordHash = PasswordUtil.hashPassword(password);
-        User user = ud.login(email, paswordHash);
-        if (user == null) {
-            session.setAttribute("notification", "Invalid username or password or role. Try again!");
-            session.setAttribute("typeNoti", "alert-danger");
-            response.sendRedirect("login");
+        String status = request.getParameter("status");
+        int order_id = Integer.parseInt(request.getParameter("order_id"));
+        IOrderDAO od = new OrderDAOImpl();
+
+        Boolean b = od.handleOrder(status, order_id);
+        HttpSession ses = request.getSession();
+        if (b) {
+            ses.setAttribute("noti", "Xử lý đơn hàng " + order_id + " thành công.");
         } else {
-            session.setAttribute("user", user);
-            if (user.getRole().equalsIgnoreCase(RoleConstant.ADMIN_ROLE) || user.getRole().equalsIgnoreCase(RoleConstant.STAFF_ROLE)) {
-                response.sendRedirect(request.getContextPath() + "/admin-dashboard");
-            } else if (user.getRole().equalsIgnoreCase(RoleConstant.USER_ROLE)) {
-                ICartDAO cd = new CartDAOImpl();
-                IOrderDAO od = new OrderDAOImpl();
-                List<Cart> totalItem = cd.getCartInfoByUserId(user.getUserId());
-                session.setAttribute("totalItem", totalItem.size());
-                ITableDAO it = new TableDAOImpl();
-                Cart c = cd.checkCart(user.getUserId());
-                if (c != null) {
-                    DiningTable table = c.getTable();
-                    session.setAttribute("tb", table);
-                } else {
-                    List<DiningTable> tables = it.getAllTable();
-                    session.setAttribute("tables", tables);
-                }
-                String url = (String) session.getAttribute("historyUrl");
-                if (url == null || url.isEmpty()) {
-                    response.sendRedirect(request.getContextPath() + "/dishes");
-                } else {
-                    response.sendRedirect(url);
-                }
-            }
+            ses.setAttribute("noti", "Xử lý đơn hàng " + order_id + " thất bại. hãy kiểm tra lại");
         }
+        response.sendRedirect(request.getContextPath() + "/manageorder");
     }
 
     /**

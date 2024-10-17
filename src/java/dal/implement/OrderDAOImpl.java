@@ -14,6 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.DiningTable;
@@ -130,6 +132,360 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
                     c.setTable(t);
                 }
                 return c;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Order> getAllOrder() {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+        }
+        List<Order> list = new ArrayList();
+        String sql = "select  * from [Order]";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt(1));
+                o.setCustomer_id(rs.getInt(2));
+                o.setCustomer_name(rs.getString(3));
+                o.setTable_id(rs.getInt(4));
+                o.setOrder_datetime(rs.getDate(5));
+                o.setTotal_cost(rs.getInt(6));
+                o.setEmail(rs.getString(7));
+                o.setPhone(rs.getString(8));
+                o.setAddress(rs.getString(9));
+                o.setNote(rs.getString(10));
+                o.setPayment_method(rs.getString(11));
+                o.setStatus(rs.getString(12));
+                list.add(o);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<Order> pagingOrder(int index, int RECORD_PER_PAGE, String key, String statusStr, int take_away) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+
+        }
+        List<Order> list = new ArrayList();
+        String sql = "select * from [Order] where status " + statusStr + " and ((address like N'%" + key + "%') or"
+                + " (customer_name like N'%" + key + "%') or (phone like N'%" + key + "%'))";
+
+        if (take_away == 1) {
+            sql += " and table_id = -1";
+        } else {
+            sql += " and table_id <> -1";
+        }
+        sql += " order by id  offset ? rows fetch next ? rows only;";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, (index - 1) * RECORD_PER_PAGE);
+            ps.setInt(2, RECORD_PER_PAGE);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt(1));
+                o.setCustomer_id(rs.getInt(2));
+                o.setCustomer_name(rs.getString(3));
+                o.setTable_id(rs.getInt(4));
+                o.setOrder_datetime(rs.getDate(5));
+                o.setTotal_cost(rs.getInt(6));
+                o.setEmail(rs.getString(7));
+                o.setPhone(rs.getString(8));
+                o.setAddress(rs.getString(9));
+                o.setNote(rs.getString(10));
+                o.setPayment_method(rs.getString(11));
+                o.setStatus(rs.getString(12));
+                list.add(o);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public int countOrderByStatus(String key, String statusStr, int take_away) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+        }
+        try {
+
+            String sql = "select count(*) from [Order] where status " + statusStr + " and ((address like N'%" + key + "%') or"
+                    + " (customer_name like N'%" + key + "%') or (phone like N'%" + key + "%'))";
+            if (take_away == 1) {
+                sql += " and table_id = -1";
+            } else {
+                sql += " and table_id <> -1";
+            }
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public Order getOrderById(int orderId) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            String sql = "select * from [Order] where id = ?";
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, orderId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt(1));
+                o.setCustomer_id(rs.getInt(2));
+                o.setCustomer_name(rs.getString(3));
+                o.setTable_id(rs.getInt(4));
+                o.setOrder_datetime(rs.getDate(5));
+                o.setTotal_cost(rs.getInt(6));
+                o.setEmail(rs.getString(7));
+                o.setPhone(rs.getString(8));
+                o.setAddress(rs.getString(9));
+                o.setNote(rs.getString(10));
+                o.setPayment_method(rs.getString(11));
+                o.setStatus(rs.getString(12));
+                return o;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean handleOrder(String status, int order_id) {
+        String sqlUpdateStatus = "UPDATE [Order] SET status = ? WHERE id = ?";
+        String sqlDeleteOrderDetails = "DELETE FROM OrderDetail WHERE order_id = ?";
+        String sqlDeleteOrder = "DELETE FROM [Order] WHERE id = ?";
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            connection.setAutoCommit(false); // Bắt đầu transaction
+            if (!status.equals("completed")) {
+                PreparedStatement st = connection.prepareStatement(sqlUpdateStatus);
+                st.setString(1, status);
+                st.setInt(2, order_id);
+                st.executeUpdate();
+            } else {
+                PreparedStatement st = connection.prepareStatement(sqlDeleteOrderDetails);
+                st.setInt(1, order_id);
+                st.executeLargeUpdate();
+                st = connection.prepareStatement(sqlDeleteOrder);
+                st.setInt(1, order_id);
+                st.executeUpdate();
+            }
+            connection.commit(); // Hoàn tất transaction
+            return true;
+
+        } catch (SQLException ex) {
+            return false;
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+    @Override
+    public List<Order> getTableOrder() {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+        }
+        List<Order> list = new ArrayList();
+        String sql = "select  * from [Order] where table_id != -1";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt(1));
+                o.setCustomer_id(rs.getInt(2));
+                o.setCustomer_name(rs.getString(3));
+                o.setTable_id(rs.getInt(4));
+                o.setOrder_datetime(rs.getDate(5));
+                o.setTotal_cost(rs.getInt(6));
+                o.setEmail(rs.getString(7));
+                o.setPhone(rs.getString(8));
+                o.setAddress(rs.getString(9));
+                o.setNote(rs.getString(10));
+                o.setPayment_method(rs.getString(11));
+                o.setStatus(rs.getString(12));
+                list.add(o);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Order getOrderById(int user_id, int table) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+        }
+
+        String sql = "select  * from [Order] where customer_id = ? and  table_id != ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, user_id);
+            ps.setInt(2, table);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt(1));
+                o.setCustomer_id(rs.getInt(2));
+                o.setCustomer_name(rs.getString(3));
+                o.setTable_id(rs.getInt(4));
+                o.setOrder_datetime(rs.getDate(5));
+                o.setTotal_cost(rs.getInt(6));
+                o.setEmail(rs.getString(7));
+                o.setPhone(rs.getString(8));
+                o.setAddress(rs.getString(9));
+                o.setNote(rs.getString(10));
+                o.setPayment_method(rs.getString(11));
+                o.setStatus(rs.getString(12));
+                return o;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Order> getOrdersByTableId(int table) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+        }
+        List<Order> list = new ArrayList();
+        String sql = "select  * from [Order] where table_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, table);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt(1));
+                o.setCustomer_id(rs.getInt(2));
+                o.setCustomer_name(rs.getString(3));
+                o.setTable_id(rs.getInt(4));
+                o.setOrder_datetime(rs.getDate(5));
+                o.setTotal_cost(rs.getInt(6));
+                o.setEmail(rs.getString(7));
+                o.setPhone(rs.getString(8));
+                o.setAddress(rs.getString(9));
+                o.setNote(rs.getString(10));
+                o.setPayment_method(rs.getString(11));
+                o.setStatus(rs.getString(12));
+                list.add(o);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Order getOrderByTalbeAndUser(int user_id, int table_id) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+        }
+
+        String sql = "select  * from [Order] where customer_id = ? and  table_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, user_id);
+            ps.setInt(2, table_id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt(1));
+                o.setCustomer_id(rs.getInt(2));
+                o.setCustomer_name(rs.getString(3));
+                o.setTable_id(rs.getInt(4));
+                o.setOrder_datetime(rs.getDate(5));
+                o.setTotal_cost(rs.getInt(6));
+                o.setEmail(rs.getString(7));
+                o.setPhone(rs.getString(8));
+                o.setAddress(rs.getString(9));
+                o.setNote(rs.getString(10));
+                o.setPayment_method(rs.getString(11));
+                o.setStatus(rs.getString(12));
+                return o;
             }
         } catch (SQLException ex) {
             Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);

@@ -96,7 +96,7 @@ public class LoginController extends HttpServlet {
         } else {
             session.setAttribute("user", user);
             if (user.getRole().equalsIgnoreCase(RoleConstant.ADMIN_ROLE) || user.getRole().equalsIgnoreCase(RoleConstant.STAFF_ROLE)) {
-                response.sendRedirect(request.getContextPath() + "/admin-dashboard");
+                response.sendRedirect(request.getContextPath() + "/manage");
             } else if (user.getRole().equalsIgnoreCase(RoleConstant.USER_ROLE)) {
                 ICartDAO cd = new CartDAOImpl();
                 IOrderDAO od = new OrderDAOImpl();

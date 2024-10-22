@@ -75,23 +75,27 @@
             <ul class="nav-ul nav navbar-pills flex-column">
 
                 <c:if test="${sessionScope.user.getRole() eq 'admin'}">
-                    <a class="nav-link ${p == 0 ? "active":""}" href="admin-manage?p=0">        
+                    <a class="nav-link ${p == 0 ? "active":""}" href="manage?p=0">        
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Thống kê
                     </a>
+                    <a class="nav-link ${p == 5 ? "active":""}" href="manage-user?p=5">        
+                        <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                        Quản lý người dùng
+                    </a>
                 </c:if>
 
-                <c:if test="${sessionScope.user.getRole() eq 'admin' || sessionScope.user.getRole() eq 'staff'}">
+                <c:if test="${sessionScope.user.getRole() eq 'staff'}">
 
-                    <a class="nav-link ${p == 1 ? "active":""}" href="manageproductlist?p=1">        
+                    <a class="nav-link ${p == 1 ? "active":""}" href="manage-dish?p=1">        
                         <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                        Quản lý sản phẩm
+                        Quản lý món ăn
                     </a>
 
-                    <c:if test="${sessionScope.user.getRole() eq 'admin'}">
-                        <a class="nav-link ${p == 2 ? "active":""}" href="managemateriallist?p=2">        
+                    <c:if test="${sessionScope.user.getRole() eq 'staff'}">
+                        <a class="nav-link ${p == 2 ? "active":""}" href="manage-table?p=2">        
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Quản lý nguyên liệu
+                            Quản lý bàn ăn
                         </a>
                     </c:if>
 

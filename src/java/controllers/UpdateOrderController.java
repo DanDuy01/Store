@@ -86,15 +86,15 @@ public class UpdateOrderController extends HttpServlet {
         String status = request.getParameter("status");
         int order_id = Integer.parseInt(request.getParameter("order_id"));
         IOrderDAO od = new OrderDAOImpl();
-
-        Boolean b = od.handleOrder(status, order_id);
         HttpSession ses = request.getSession();
+        String url = (String) ses.getAttribute("historyUrl");
+        Boolean b = od.handleOrder(status, order_id);
         if (b) {
             ses.setAttribute("noti", "Xử lý đơn hàng " + order_id + " thành công.");
         } else {
             ses.setAttribute("noti", "Xử lý đơn hàng " + order_id + " thất bại. hãy kiểm tra lại");
         }
-        response.sendRedirect(request.getContextPath() + "/manageorder");
+        response.sendRedirect(url);
     }
 
     /**

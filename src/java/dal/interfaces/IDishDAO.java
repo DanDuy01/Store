@@ -19,4 +19,14 @@ public interface IDishDAO {
 
     public List<Dish> getRelatedDish(int product_id, int category_id);
 
+    public int getTotalProduct();
+
+    public void updateDish(Dish d);
+
+    public int createDish(Dish d);
+
+    public int createImage(String base64Image);
+
+    public void saveImageToDish(int newdishId, int newimageId);
+
 }

@@ -5,6 +5,7 @@
 package dal.interfaces;
 
 import java.util.List;
+import models.Chart;
 import models.Order;
 
 public interface IOrderDAO {
@@ -35,4 +36,7 @@ public interface IOrderDAO {
 
     public Order getOrderByTalbeAndUser(int user_id, int table_id);
 
+    public List<Chart> getChartRevenueArea(String start, int numberOfDay);
+
+    public int gettotalOrderByStatus(String status, String start, int numberOfDay);
 }

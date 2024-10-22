@@ -4,16 +4,29 @@
  */
 package controllers;
 
+import dal.implement.CategoryDAOImpl;
+import dal.implement.DishDAOImpl;
+import dal.implement.TableDAOImpl;
+import dal.interfaces.ICategoryDAO;
+import dal.interfaces.IDishDAO;
+import dal.interfaces.ITableDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.List;
+import models.Category;
+import models.DiningTable;
+import models.Dish;
+import org.apache.commons.io.IOUtils;
 
-@WebServlet(name = "HeadmasterDashboardController", urlPatterns = {"/headmaster/dashboard"})
-public class AdminDashboardController extends HttpServlet {
+public class ManageTableController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,10 +45,10 @@ public class AdminDashboardController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HeadmasterDashboardController</title>");
+            out.println("<title>Servlet ManageTableController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HeadmasterDashboardController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ManageTableController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -53,7 +66,12 @@ public class AdminDashboardController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("./views/dashboard.jsp").forward(request, response);
+        ITableDAO td = new TableDAOImpl();
+        List<DiningTable> tables = td.getAllTable();
+
+        request.setAttribute("listOfPage", tables);
+        request.setAttribute("p", 2);
+        request.getRequestDispatcher("./views/manage-table.jsp").forward(request, response);
     }
 
     /**
@@ -67,7 +85,23 @@ public class AdminDashboardController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        ITableDAO dd = new TableDAOImpl();
+        String action = request.getParameter("action");
+        String name = request.getParameter("tableName");
+        String capacity = request.getParameter("capacity");
+
+        DiningTable d = new DiningTable();
+        d.setName(name);
+        d.setCapacity(capacity);
+
+        if (action.equals("edit")) {
+            String id = request.getParameter("tableId");
+            d.setId(Integer.parseInt(id));
+            dd.updateTable(d);
+        } else {
+            int newdishId = dd.createTable(d);
+        }
+        response.sendRedirect("manage-table");
     }
 
     /**

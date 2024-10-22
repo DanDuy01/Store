@@ -309,4 +309,233 @@ public class UserDAOImpl extends context.DBContext implements IUserDAO {
 
     }
 
+    @Override
+    public int CountCustomer() {
+        try {
+            connection = dBContext.openConnection();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UserDAOImpl.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+        int value = 0;
+        String sql = "select count(*) from [User] where role = 'user' ";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                value = rs.getInt(1);
+
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAOImpl.class
+                    .getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+        return value;
+    }
+
+    @Override
+    public List<User> getUsers() {
+        List<User> list = new ArrayList();
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String sql = "SELECT * FROM [User] where role <> 'admin'";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("userId"));
+                user.setPassword(rs.getString("password"));
+                user.setFullName(rs.getString("fullName"));
+                user.setDob(rs.getDate("dob"));
+                user.setGender(rs.getString("gender"));
+                user.setAvatar(rs.getString("avatar"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setAddress(rs.getString("address"));
+                user.setRole(rs.getString("role"));
+                user.setActive(rs.getBoolean("active"));
+
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+                Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public User getUserByEmail(String uid, String email) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String sql = "SELECT * FROM [User] where email = ? ";
+        if (!uid.isEmpty()) {
+            sql += " and userId <> ?";
+        }
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int count = 0;
+            ps.setString(++count, email);
+            if (!uid.isEmpty()) {
+                ps.setInt(++count, Integer.parseInt(uid));
+            }
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("userId"));
+                user.setPassword(rs.getString("password"));
+                user.setFullName(rs.getString("fullName"));
+                user.setDob(rs.getDate("dob"));
+                user.setGender(rs.getString("gender"));
+                user.setAvatar(rs.getString("avatar"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setAddress(rs.getString("address"));
+                user.setRole(rs.getString("role"));
+                user.setActive(rs.getBoolean("active"));
+                return user;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+                Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public User getUserByPhone(String uid, String phone) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String sql = "SELECT * FROM [User] where phone = ? ";
+        if (!uid.isEmpty()) {
+            sql += " and userId <> ?";
+        }
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int count = 0;
+            ps.setString(++count, phone);
+            if (!uid.isEmpty()) {
+                ps.setInt(++count, Integer.parseInt(uid));
+            }
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("userId"));
+                user.setPassword(rs.getString("password"));
+                user.setFullName(rs.getString("fullName"));
+                user.setDob(rs.getDate("dob"));
+                user.setGender(rs.getString("gender"));
+                user.setAvatar(rs.getString("avatar"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setAddress(rs.getString("address"));
+                user.setRole(rs.getString("role"));
+                user.setActive(rs.getBoolean("active"));
+                return user;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+                Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void updateUser(User user) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String sql = "Update [User] set email=?, phone=?,fullName = ?, dob = ?,address = ?, role = ?, active =?"
+                + " where userId = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getPhone());
+            ps.setString(3, user.getFullName());
+            ps.setDate(4, user.getDob());
+            ps.setString(5, user.getAddress());
+            ps.setString(6, user.getRole());
+            ps.setBoolean(7, user.isActive());
+            ps.setInt(8, user.getUserId());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+                Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
+
+    @Override
+    public void insertUser(User user) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String sql = "Insert into [User] (email, phone,fullName, dob,address, role, active) values (?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getPhone());
+            ps.setString(3, user.getFullName());
+            ps.setDate(4, user.getDob());
+            ps.setString(5, user.getAddress());
+            ps.setString(6, user.getRole());
+            ps.setBoolean(7, true);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+                Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
+
 }

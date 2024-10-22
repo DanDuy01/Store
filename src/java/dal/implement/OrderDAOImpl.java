@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import models.Chart;
 import models.DiningTable;
 
 public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
@@ -34,7 +35,7 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
         }
 
         String sql = "select * from [Order] o join [OrderDetail] od on o.id = od.order_id \n"
-                + "where o.customer_id = ? and od.dish_id = ?";
+                + "where o.customer_id = ? and od.dish_id = ? and o.status <> 'completed'";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userId);
@@ -112,7 +113,7 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
         }
 
         String sql = "select * from [Order] "
-                + "where customer_id = ? and  (status = 'pending' or status = 'success') ";
+                + "where customer_id = ? and  (status = 'pending' or status = 'processing') ";
 
         if (afalse == null || afalse.equals("true")) {
             sql += " and table_id = -1";
@@ -151,7 +152,7 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
         } catch (ClassNotFoundException | SQLException e) {
         }
         List<Order> list = new ArrayList();
-        String sql = "select  * from [Order]";
+        String sql = "select  * from [Order] where status <> 'completed'";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -306,37 +307,35 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
     @Override
     public Boolean handleOrder(String status, int order_id) {
         String sqlUpdateStatus = "UPDATE [Order] SET status = ? WHERE id = ?";
-        String sqlDeleteOrderDetails = "DELETE FROM OrderDetail WHERE order_id = ?";
-        String sqlDeleteOrder = "DELETE FROM [Order] WHERE id = ?";
         try {
             connection = dBContext.openConnection();
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
         try {
             connection.setAutoCommit(false); // Bắt đầu transaction
-            if (!status.equals("completed")) {
-                PreparedStatement st = connection.prepareStatement(sqlUpdateStatus);
-                st.setString(1, status);
-                st.setInt(2, order_id);
-                st.executeUpdate();
-            } else {
-                PreparedStatement st = connection.prepareStatement(sqlDeleteOrderDetails);
-                st.setInt(1, order_id);
-                st.executeLargeUpdate();
-                st = connection.prepareStatement(sqlDeleteOrder);
-                st.setInt(1, order_id);
-                st.executeUpdate();
-            }
+            // Luôn cập nhật status bất kể là "completed" hay không
+            PreparedStatement st = connection.prepareStatement(sqlUpdateStatus);
+            st.setString(1, status);
+            st.setInt(2, order_id);
+            st.executeUpdate();
+
             connection.commit(); // Hoàn tất transaction
             return true;
 
         } catch (SQLException ex) {
+            try {
+                connection.rollback(); // Rollback nếu có lỗi
+            } catch (SQLException e) {
+                Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+            }
             return false;
         } finally {
             try {
                 dBContext.closeConnection(connection);
             } catch (SQLException e) {
+                Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }
@@ -348,7 +347,7 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
         } catch (ClassNotFoundException | SQLException e) {
         }
         List<Order> list = new ArrayList();
-        String sql = "select  * from [Order] where table_id != -1";
+        String sql = "select  * from [Order] where table_id != -1 and status <> 'completed'";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -426,7 +425,7 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
         } catch (ClassNotFoundException | SQLException e) {
         }
         List<Order> list = new ArrayList();
-        String sql = "select  * from [Order] where table_id = ?";
+        String sql = "select  * from [Order] where table_id = ? and status <> 'completed' ";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, table);
@@ -465,7 +464,7 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
         } catch (ClassNotFoundException | SQLException e) {
         }
 
-        String sql = "select  * from [Order] where customer_id = ? and  table_id = ?";
+        String sql = "select  * from [Order] where customer_id = ? and  table_id = ? and status <> 'completed'";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, user_id);
@@ -496,6 +495,86 @@ public class OrderDAOImpl extends context.DBContext implements IOrderDAO {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<Chart> getChartRevenueArea(String start, int numberOfDay) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+
+        }
+        List<Chart> list = new ArrayList<>();
+        for (int i = 0; i < numberOfDay; i++) {
+            int value = 0;
+            try {
+                String sql = "SELECT SUM(total_cost)\n"
+                        + "FROM (\n"
+                        + "  SELECT *\n"
+                        + "  FROM [Order]\n"
+                        + "  WHERE status = 'completed' \n"
+                        + ") AS orders_with_status\n"
+                        + "WHERE order_datetime BETWEEN ? AND DATEADD(DAY,?,?)";
+                PreparedStatement st = connection.prepareStatement(sql);
+                st.setString(1, start);
+                st.setInt(2, i);
+                st.setString(3, start);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    value = rs.getInt(1);
+                }
+                sql = "select  DATEADD(DAY, ?, ?)";
+                st = connection.prepareStatement(sql);
+                st.setInt(1, i);
+                st.setString(2, start);
+                rs = st.executeQuery();
+                if (rs.next()) {
+                    Chart c = new Chart();
+                    c.setDate(rs.getDate(1));
+                    c.setValue(value);
+                    list.add(c);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        try {
+            dBContext.closeConnection(connection);
+        } catch (SQLException e) {
+        }
+
+        return list;
+    }
+
+    @Override
+    public int gettotalOrderByStatus(String status, String start, int numberOfDay) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (ClassNotFoundException | SQLException e) {
+        }
+        int sum = 0;
+        for (int i = 0; i < numberOfDay; i++) {
+            try {
+                String sql = "select count(id) from [Order] where status = ? and order_datetime"
+                        + " between ? and DATEADD(DAY, ?,?)";
+                PreparedStatement st = connection.prepareStatement(sql);
+                st.setString(1, status);
+                st.setString(2, start);
+                st.setInt(3, i);
+                st.setString(4, start);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    sum += rs.getInt(1);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        try {
+            dBContext.closeConnection(connection);
+        } catch (SQLException e) {
+        }
+        return sum;
     }
 
 }

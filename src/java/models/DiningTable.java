@@ -10,6 +10,9 @@ public class DiningTable {
     private String name;
     private String capacity;
 
+    public DiningTable() {
+    }
+
     public DiningTable(int id, String number, String capacity) {
         this.id = id;
         this.name = number;

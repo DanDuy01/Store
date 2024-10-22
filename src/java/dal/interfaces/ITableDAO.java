@@ -14,4 +14,8 @@ public interface ITableDAO {
     public DiningTable getTableById(int aInt);
 
     public List<DiningTable> getAllTable();
+
+    public void updateTable(DiningTable d);
+
+    public int createTable(DiningTable d);
 }

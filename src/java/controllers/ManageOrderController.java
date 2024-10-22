@@ -80,7 +80,7 @@ public class ManageOrderController extends HttpServlet {
             }
             int index = Integer.parseInt(indexPageStr);
 
-            String statusStr = " != 'all'";
+            String statusStr = " != 'completed'";
             String status = "%%";
             String statusOrderStr = request.getParameter("status");
             if (statusOrderStr != null && !statusOrderStr.equals("null")) {
@@ -106,6 +106,7 @@ public class ManageOrderController extends HttpServlet {
             if (statusOrderStr != null) {
                 history = history + "&status=" + statusOrderStr;
             }
+            request.setAttribute("p", 3);
 
             session.setAttribute("historyUrl", history);
             request.setAttribute("status", status);
@@ -119,6 +120,7 @@ public class ManageOrderController extends HttpServlet {
             //request.setAttribute("listByCond", listByCondition);
             request.getRequestDispatcher("./views/manage-order-list.jsp").forward(request, response);
         } else {
+            session.setAttribute("historyUrl", "manageorder?take_away=0");
             session.setAttribute("take_away", take_away);
             ITableDAO td = new TableDAOImpl();
             List<DiningTable> availables = td.getAvalableTables();
@@ -128,7 +130,7 @@ public class ManageOrderController extends HttpServlet {
             for (Order order : table_orders) {
                 bookedTableIds.add(order.getTable_id());
             }
-
+            request.setAttribute("p", 4);
             request.setAttribute("bookedTableIds", bookedTableIds);
             request.setAttribute("table_orders", table_orders);
             request.setAttribute("tables", list);

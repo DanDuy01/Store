@@ -13,7 +13,7 @@
                     </h5>
                     <p>
                         <i class="fa fa-map-marker" aria-hidden="true"></i>
-                        Đất Thổ Cư Hòa Lạc, Km29 Đường Cao Tốc 08,xã Thạch Hoà, huyện Thạch Thất, thành phố Hà Nội
+                        Trường Đại học FPT Hà Nội, Khu Công Nghệ Cao Hòa Lạc, Km 29, Đại lộ Thăng Long, Hà Nội
                     </p>
                     <p>
                         <i class="fa fa-phone" aria-hidden="true"></i>

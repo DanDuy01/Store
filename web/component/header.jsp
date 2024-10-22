@@ -141,7 +141,7 @@
                         <p>• Hotline: 0123456789</p>
                         <p>• IG: @swprestaurant</p>
                         <p>• FB: fb.com/swprestaurant</p>
-                        <p>• Address: Hà Nội</p>
+                        <p>• Address: Đại học FPT Hà Nội</p>
                         <p>-------------------------------</p>
                     </div>
                 </div>

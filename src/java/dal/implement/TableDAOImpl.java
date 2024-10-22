@@ -12,6 +12,7 @@ import models.Category;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -97,6 +98,68 @@ public class TableDAOImpl extends DBContext implements ITableDAO {
             }
         }
         return list;
+    }
+
+    @Override
+    public void updateTable(DiningTable d) {
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DishDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        String sql = "Update DiningTable set name = ?, capacity = ? where id = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            st.setString(1, d.getName());
+            st.setString(2, d.getCapacity());
+            st.setInt(3, d.getId());
+            // Thực thi câu lệnh
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            Logger.getLogger(DishDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+    @Override
+    public int createTable(DiningTable d) {
+        int imageId = -1;
+        try {
+            connection = dBContext.openConnection();
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(DishDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        String sql = "INSERT INTO DiningTable (name, capacity) VALUES (?,?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            st.setString(1, d.getName());
+            st.setString(2, d.getCapacity());
+
+            // Thực thi câu lệnh
+            st.executeUpdate();
+
+            // Lấy ID tự động sinh ra
+            ResultSet rs = st.getGeneratedKeys();
+            if (rs.next()) {
+                imageId = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DishDAOImpl.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            try {
+                dBContext.closeConnection(connection);
+            } catch (SQLException e) {
+            }
+        }
+
+        return imageId;
     }
 
 }

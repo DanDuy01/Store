@@ -1,7 +1,5 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 
 <!-- Notification User -->
 <c:if test="${notification !=null}">
@@ -53,7 +51,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- user profile -->
 <div class="modal fade col-md-12" role="dialog" id="userProfileModal" style="padding-right: 18px" >
@@ -155,8 +152,6 @@
     </div>
 </div> 
 
-
-
 <!-- Change Password -->
 <div class="modal fade col-md-12" role="dialog" id="ChangePasswordModal" >
     <div class="modal-dialog">
@@ -192,9 +187,7 @@
     </div>
 </div>
 
-
 <!-- Register -->
-
 <div class="modal fade col-md-12" role="dialog" id="registerModal" style="padding-right: 18px" >
     <div class="modal-dialog">
         <div class="modal-content" style="border-radius: 10px; margin-top: -20px;">
@@ -263,7 +256,6 @@
     </div>
 </div> 
 
-
 <!-- ResetPassword -->
 <div class="modal fade col-md-12" role="dialog" id="ResetPasswordModal">
     <div class="modal-dialog">
@@ -314,9 +306,8 @@
     }, 3000);
 </script>-->
 <script>
-
     function validateFormRegister() {
-
+        
         // Lấy giá trị của các trường input
         const name = document.forms["registerForm"]["fullName"].value.trim();
         const email = document.forms["registerForm"]["email"].value.trim();
@@ -345,8 +336,6 @@
             alert("Vui lòng nhập số điện thoại hợp lệ");
             return false;
         }
-
-
 
         if (password.length < 8 || password.length > 32) {
             alert("Vui lòng nhập mật khẩu có độ dài từ 8 đến 32 ký tự");

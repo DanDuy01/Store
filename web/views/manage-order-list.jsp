@@ -124,7 +124,6 @@
                                     <option class=" text-center" value="manageorder?${historyKey}&status=processing" ${status eq 'processing' ? "Selected" : ""}>
                                         Đang thực hiện
                                     </option> 
-
                                 </select>
                             </div>
                         </div>
@@ -189,23 +188,17 @@
                                         </c:forEach>
                                     </tbody>
                                 </table>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
-
-
             </div>
-
         </div>
 
         <script>
             function clearInput() {
                 document.getElementById("myInput1").value = "";
             }
-
         </script>
     </body>
 </html>

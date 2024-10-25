@@ -4,12 +4,9 @@
  */
 package models;
 
-/**
- *
- * @author ThinkPro
- */
 public class OrderDetail {
-    private int order_id ;
+
+    private int order_id;
     private int dish_id;
     private int quantity;
     private int price;
@@ -63,7 +60,7 @@ public class OrderDetail {
     public void setDish(Dish dish) {
         this.dish = dish;
     }
-    
+
     public OrderDetail() {
     }
 
@@ -73,5 +70,5 @@ public class OrderDetail {
         this.quantity = quantity;
         this.price = price;
     }
-    
+
 }

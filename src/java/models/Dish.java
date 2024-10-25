@@ -6,11 +6,8 @@ package models;
 
 import java.util.List;
 
-/**
- *
- * @author ThinkPro
- */
 public class Dish {
+
     private int id;
     private String name;
     private int price;
@@ -29,8 +26,6 @@ public class Dish {
         this.category_id = category_id;
     }
 
-    
-    
     public List<Image> getImages() {
         return Images;
     }
@@ -38,8 +33,6 @@ public class Dish {
     public void setImages(List<Image> Images) {
         this.Images = Images;
     }
-   
-    
 
     public Dish() {
     }
@@ -65,8 +58,6 @@ public class Dish {
         this.is_available = status;
         this.category_id = category_id;
     }
-
-   
 
     public int getId() {
         return id;
@@ -116,8 +107,6 @@ public class Dish {
         this.is_available = is_available;
     }
 
-   
-
     public Category getCategory() {
         return category;
     }
@@ -125,6 +114,5 @@ public class Dish {
     public void setCategory(Category category) {
         this.category = category;
     }
-    
-    
+
 }

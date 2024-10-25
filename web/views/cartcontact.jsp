@@ -233,7 +233,6 @@
     </style>
     <%@include file="../component/header.jsp" %>
     <body>
-
         <div class="card" style="margin-top: 10%;
              margin-bottom: 5%">
             <div class="row">
@@ -297,15 +296,14 @@
                                         <img src="https://www.coolmate.me/images/vnpay.png">
                                     </span>
                                     <span class="payment-method__item-name">
-                                        Thẻ ATM / Internet Banking<br>Thẻ tín dụng (Credit card) / Thẻ ghi nợ (Debit
-                                        card)<br>VNPay QR
+                                        Thẻ ATM / Internet Banking<br>Thẻ tín dụng (Credit card) / Thẻ ghi nợ (Debit card)
+                                        <br>VNPay QR
                                     </span>
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
-
 
                 <div class="style-btn col-md-4 summary ">
                     <div class="row">
@@ -314,7 +312,7 @@
                     </div>
                     <hr>
                     <form class="input-name" action="orders" method="post" name="formInformationCustomer" onsubmit="return validateFormInformationCustomer()">
-                        <label for="fullname">Họ Tên</label>
+                        <label for="fullname">HỌ TÊN</label>
 
                         <input  type="hidden" name="table_id" value="${sessionScope.listCart.get(0).getTable_id()}">
 
@@ -339,13 +337,12 @@
 <!--                            <input type="hidden" name="sum" value="${sessionScope.sum}">-->
                         </div>
                         <input type="hidden" id="paym-method" name="paym-method">
-                        <button type="submit" class="btn" style="font-size: 20px;" onclick="submitForm()">Đặt hàng</button>
+                        <button type="submit" class="btn" style="font-size: 20px;" onclick="submitForm()">ĐẶT HÀNG</button>
 <!--                        <a href="checkout?amount=${sessionScope.sum}" type="submit" class="btn" style="font-size: 20px;">Đặt hàng</a>-->
                     </form>
                 </div>
             </div>
         </div>
-
 
         <%@include file="../component/footer.jsp" %>
         <script>
@@ -354,7 +351,6 @@
                 const email = document.forms["formInformationCustomer"]["email"].value.trim();
                 const phone = document.forms["formInformationCustomer"]["phone"].value.trim();
                 const address = document.forms["formInformationCustomer"]["address"].value.trim();
-
 
                 // Kiểm tra tên có rỗng không
                 if (name.length === 0) {
@@ -369,8 +365,8 @@
                     return false;
                 }
 
-                Kiểm tra định dạng số điện thoại
-                        const phoneRegex = /^0\d{9}$/;
+                //Kiểm tra định dạng số điện thoại
+                const phoneRegex = /^0\d{9}$/;
                 if (!phoneRegex.test(phone)) {
                     alert("Vui lòng nhập số điện thoại hợp lệ!a");
                     return false;
@@ -380,8 +376,6 @@
                     alert("Độ dài address ít nhất 10 ký tự");
                     return false;
                 }
-
-
 
                 return true;
             }
@@ -399,7 +393,6 @@
             document.getElementById("payment-vnpay").addEventListener("click", function () {
                 document.getElementById("paym-method").value = this.value;
             });
-
 
             function submitForm() {
                 const genderInputs = document.getElementsByName('payment-method');

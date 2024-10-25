@@ -1,4 +1,3 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -208,11 +207,10 @@
                         <div class="col-lg-12">
                             <div class="cart-table">
                                 <table>
-                                    <thead style="position: sticky; top: 0;
-                                           background-color: #FFFFE0;">
+                                    <thead style="position: sticky; top: 0; background-color: #FFFFE0;">
                                         <tr>
-                                            <th> Ảnh sản phẩm</th>
-                                            <th class="p-name">Tên sản phẩm</th>
+                                            <th> Ảnh</th>
+                                            <th class="p-name">Sản phẩm</th>
                                             <th>Giá tiền</th>
                                             <th>Số lượng</th>
                                             <th>Tổng tiền</th>
@@ -228,7 +226,7 @@
                                                 </td>
                                                 <td id="price" class="p-price first-row">${c.getDish().getPrice()}₫</td>
                                                 <td class="qua-col first-row">
-                                                    <div   class="quantity" id="formQuantity" >                                                
+                                                    <div class="quantity" id="formQuantity" >                                                
                                                         <div class="countProduct">
                                                             <div id="decrement" class="decrement"  ><a href="updatecart?table_id=${table eq null ? -1 : table.id}&product_id=${c.dish_id}&quantity=${(c.quantity-1) eq 0 ? 1 : (c.quantity-1)}"><b>-</b></a></div>
                                                             <input type="number" min="1" max="100" step="1" value="${c.quantity}" id="my-input${c.dish_id}" readonly>
@@ -286,15 +284,13 @@
         <script src="./do/js/owl.carousel.min.js"></script>
         <script src="./do/js/main.js"></script>
         <script>
-                                                        function confirmDeleteProduct() {
-                                                            if (confirm("Bạn có chắc chắn muốn xóa?")) {
-                                                                return true;
-                                                            } else {
-                                                                return false;
-                                                            }
-                                                        }
+            function confirmDeleteProduct() {
+                if (confirm("Bạn có chắc chắn muốn xóa?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         </script>
-
-
     </body>
 </html>

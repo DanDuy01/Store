@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -176,8 +175,6 @@
                                                 </c:choose>
                                             </div>
                                         </c:forEach>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -185,11 +182,11 @@
                     </div>
                 </div>
             </div>
+
             <script>
                 function clearInput() {
                     document.getElementById("myInput1").value = "";
                 }
-
             </script>
     </body>
 </html>

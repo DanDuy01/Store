@@ -210,7 +210,7 @@
                     <div style="width: 450px; height: 450px; background-color: white; " id="carouselExampleControls" class="carousel slide col-md-5" data-ride="carousel">
                         <div class="carousel-inner" style="width: 100%; height: 100%;">
                             <div class="image-zoom carousel-item active">
-                                <img id="imgProduct" class="d-block w-100"  src="${product.getImages().get(0).getUrl()}" alt="First slide">
+                                <img id="imgProduct" class="d-block w-100" src="${product.getImages().get(0).getUrl()}" alt="First slide">
                             </div>
                             <c:forEach items="${product.getImages()}" var="i" begin="1">
                                 <div class="image-zoom carousel-item" style="width: 100%; height: 100%;">                              
@@ -239,7 +239,7 @@
                             <div class="fs-5 mb-4">
                                 <div style="margin-bottom: 1.7%">
                                     Giá: 
-                                    <span >${product.price}VND</span>
+                                    <span >${product.price} VND</span>
                                 </div>
                             </div>
                             <div class="col-lg-3 mb-1">
@@ -306,8 +306,6 @@
                 <hr class="marketing_feedback_margin">
                 <span><h2 class="marketing_feedback_margin marketing_feedbac_displayinline">${totalFeedback} Đánh giá</h2></span>
 
-
-
                 <hr class="marketing_feedback_margin">
 
                 <div class="mt-5 mb-5" id="review_content">
@@ -359,7 +357,6 @@
                             </div>
                         </c:forEach>
 
-
                         <!-- pagination -->
                         <nav aria-label="..." class="pagination float-right">
                             <ul class="pagination">
@@ -391,9 +388,6 @@
                 </div>
             </div>
         </c:if>
-
-
-
 
         <!-- feedback form -->
         <div id="review_modal" class="modal" tabindex="-1" role="dialog">
@@ -442,7 +436,6 @@
             </div>
         </div>
 
-
         <!-- Related product section-->
         <hr class="marketing_feedback_margin">
         <section class="py-5 bg-light">
@@ -461,7 +454,7 @@
                                     <!-- Product price-->
                                     <div>
                                         Giá:
-                                        <span style="color: red">${p.price}đ</span>
+                                        <span style="color: red">${p.price} đ</span>
                                     </div>
                                 </div>
                             </div>
@@ -475,7 +468,6 @@
             </div>
         </section>
 
-
         <!-- Footer-->
         <%@include file="../component/footer.jsp" %>
         <!-- Bootstrap core JS-->
@@ -483,35 +475,34 @@
         <!-- Core theme JS-->
 
         <script>
-                            const myInput = document.getElementById("my-input");
-                            function stepper(btn) {
-                                let id = btn.getAttribute("id");
-                                let min = myInput.getAttribute("min");
-                                let max = myInput.getAttribute("max");
-                                let step = myInput.getAttribute("step");
-                                let val = myInput.getAttribute("value");
-                                let calcStep = (id === "increment") ? (step * 1) : (step * -1);
-                                let newValue = parseInt(val) + calcStep;
-                                if (newValue >= min && newValue <= max) {
-                                    myInput.setAttribute("value", newValue);
-                                }
-                            }
+            const myInput = document.getElementById("my-input");
+            function stepper(btn) {
+                let id = btn.getAttribute("id");
+                let min = myInput.getAttribute("min");
+                let max = myInput.getAttribute("max");
+                let step = myInput.getAttribute("step");
+                let val = myInput.getAttribute("value");
+                let calcStep = (id === "increment") ? (step * 1) : (step * -1);
+                let newValue = parseInt(val) + calcStep;
+                if (newValue >= min && newValue <= max) {
+                    myInput.setAttribute("value", newValue);
+                }
+            }
         </script>
 
-        <!--        <script>
-                    var img = document.getElementById("imgProduct");
+        <!--<script>
+            var img = document.getElementById("imgProduct");
         
         // Bắt sự kiện hover của chuột trên ảnh
-                    img.addEventListener("mousemove", function (event) {
-                        // Lấy tọa độ của chuột trên ảnh
-                        var x = event.offsetX;
-                        var y = event.offsetY;
-        
-                        // Gán tọa độ vào thuộc tính transform-origin của ảnh
-                        img.style.transformOrigin = x + "px " + y + "px";
-                    });
-                </script>-->
+            img.addEventListener("mousemove", function (event) {
+                // Lấy tọa độ của chuột trên ảnh
+                var x = event.offsetX;
+                var y = event.offsetY;
 
+                // Gán tọa độ vào thuộc tính transform-origin của ảnh
+                img.style.transformOrigin = x + "px " + y + "px";
+            });
+        </script>-->
 
         <script>
             var sliderImages = document.querySelectorAll(".carousel-item img");
@@ -565,7 +556,6 @@
                 return true;
             }
         </script>
-
 
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>

@@ -4,10 +4,6 @@
  */
 package models;
 
-/**
- *
- * @author ThinkPro
- */
 public enum Capacity {
-    
+
 }

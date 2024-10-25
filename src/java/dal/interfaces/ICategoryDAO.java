@@ -7,10 +7,7 @@ package dal.interfaces;
 import java.util.List;
 import models.Category;
 
-/**
- *
- * @author ThinkPro
- */
 public interface ICategoryDAO {
+
     public List<Category> getCategoryList();
 }

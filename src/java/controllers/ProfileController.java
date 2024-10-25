@@ -77,7 +77,7 @@ public class ProfileController extends HttpServlet {
         if (user != null) {
             request.getRequestDispatcher("./views/profile.jsp").forward(request, response);
         } else {
-            response.sendRedirect(request.getContextPath() +"/login");
+            response.sendRedirect(request.getContextPath() + "/login");
         }
     }
 
@@ -110,7 +110,7 @@ public class ProfileController extends HttpServlet {
             if (existingUser != null) {
                 // Email đã tồn tại
                 session.setAttribute("notification", "Email already in use by another user.");
-                response.sendRedirect(request.getContextPath() +"/profile");
+                response.sendRedirect(request.getContextPath() + "/profile");
                 return;
             }
             user.setFullName(fullName);
@@ -156,12 +156,12 @@ public class ProfileController extends HttpServlet {
                     session.setAttribute("notification", "Change password successfully.");
                     session.setAttribute("typeNoti", "alert-success");
                     session.removeAttribute("user");
-                    response.sendRedirect(request.getContextPath() +"/login");
+                    response.sendRedirect(request.getContextPath() + "/login");
                 } else {
                     // Có lỗi xảy ra trong quá trình thay đổi mật khẩu
                     session.setAttribute("notification", "Failed to change password. Please try again later.");
                     session.setAttribute("typeNoti", "alert-danger");
-                    response.sendRedirect(request.getContextPath() +"/profile"); // Redirect back to the profile page
+                    response.sendRedirect(request.getContextPath() + "/profile"); // Redirect back to the profile page
                 }
             } else {
                 // Mật khẩu cũ không đúng

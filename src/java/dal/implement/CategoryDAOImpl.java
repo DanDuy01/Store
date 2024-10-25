@@ -16,15 +16,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author ThinkPro
- */
-public class CategoryDAOImpl extends context.DBContext implements ICategoryDAO{
+public class CategoryDAOImpl extends context.DBContext implements ICategoryDAO {
 
     Connection connection = null;
     DBContext dBContext = new DBContext();
-    
+
     @Override
     public List<Category> getCategoryList() {
         List<Category> list = new ArrayList();
@@ -48,5 +44,5 @@ public class CategoryDAOImpl extends context.DBContext implements ICategoryDAO{
         }
         return list;
     }
-    
+
 }

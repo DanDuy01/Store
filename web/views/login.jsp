@@ -46,21 +46,21 @@
                                         <button class="btn btn-primary btn-block" type="submit">Login</button>
                                     </div>
                                 </form>
-                                <!--                                <div class="text-center forgotpass"><a href="forgot-password.html">Forgot Password?</a></div>
-                                                                <a class="edit-link" data-toggle="modal" href="#register_personal_">
-                                                                                            <i class="far fa-edit mr-1"></i>Register</a>-->
+                                <!--<div class="text-center forgotpass"><a href="forgot-password.html">Forgot Password?</a></div>
+                                    <a class="edit-link" data-toggle="modal" href="#register_personal_">
+                                    <i class="far fa-edit mr-1"></i>Register</a>-->
                                 <div class="text-center forgotpass">
                                     <a href="forgot-password.html">Forgot Password?</a>
                                     <span>    |    </span>
                                     <a href="#register_personal_" data-toggle="modal">Register</a>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
         <!-- Modal -->
         <div id="register_personal_" class="modal fade" role="dialog">
             <div class="modal-dialog">

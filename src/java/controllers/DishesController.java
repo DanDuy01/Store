@@ -18,10 +18,6 @@ import java.util.List;
 import models.Category;
 import models.Dish;
 
-/**
- *
- * @author ThinkPro
- */
 public class DishesController extends HttpServlet {
 
     private final int record_per_page = 8;
@@ -154,7 +150,6 @@ public class DishesController extends HttpServlet {
         }
         int index = Integer.parseInt(indexPage);
 
-        
         // Set category
         int cp_id = 0;
         String categoryId = "!= -1";

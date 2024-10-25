@@ -1,8 +1,3 @@
-<%-- 
-    Document   : order-details
-    Created on : Mar 12, 2023, 3:13:45 AM
-    Author     : ThinkPro
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -213,9 +208,7 @@
                                             </select>
                                         </span>
                                     </div>
-
                                 </c:if> 
-
 
                                 <c:if test="${order.status == 'pending' or order.status == 'processing'}">
                                     <div>
@@ -234,8 +227,6 @@
                                             </span>
                                         </c:if> 
                                     </div>
-
-
                                 </c:if>
 
                                 <div> 
@@ -260,8 +251,6 @@
 
                             </div>
                         </div>
-
-
 
                         <div class="col-md-6" >
                             <div class="scrollBar">
@@ -301,7 +290,6 @@
                                 </table>
                             </div>
 
-
                             <div class="card-footer" style="display: flex;">
                                 <span style="margin-right: 40px;">
                                     <img class="img-fluid my-auto align-self-center " src="images/logo.png" width="115" height="115"></span>
@@ -320,7 +308,6 @@
                             <input id="submit-btn" onclick="submitForm()" class="btn btn-dark btn-lg" value="Lưu">  
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

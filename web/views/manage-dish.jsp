@@ -147,15 +147,13 @@
                                         </c:forEach>
                                     </tbody>
                                 </table>
-
-
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+                    
         <!-- Modal for Edit User -->
         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -211,7 +209,6 @@
                 </div>
             </div>
         </div>
-
 
         <!-- Modal for Add User -->
         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">

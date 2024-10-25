@@ -146,7 +146,6 @@
                                     </option> 
                                 </select>
                             </div>
-
                         </div>
 
                         <div class="row" style="margin-top:40px;">
@@ -181,11 +180,9 @@
                                 </div>
                             </c:forEach>
                         </div>
-
                     </div>
                 </div>
             </div>
-
 
             <c:if test="${list.size() != 0}">
                 <!-- pagination -->
@@ -318,7 +315,6 @@
                 document.getElementById('totalPrice').innerText = totalPrice + 'đ';
             }
         </script>
-
 
 </body>
 </html>

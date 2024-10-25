@@ -49,7 +49,6 @@
                                             <a href="#">
                                                 <img class="rounded-circle" alt="User Image" 
                                                      src="${sessionScope.user.avatar != null ? sessionScope.user.avatar : './images/user.png'}">
-
                                             </a>
                                         </div>
                                         <div class="col ml-md-n2 profile-user-info">
@@ -57,7 +56,6 @@
                                             <h6 class="text-muted">${sessionScope.user.role}</h6>
                                             <div class="user-Location"><i class="fas fa-map-marker-alt"></i> ${sessionScope.user.address}</div>
                                         </div>
-
                                     </div>
                                 </div>
                                 <div class="profile-menu">
@@ -171,8 +169,7 @@
                                     <c:if test="${sessionScope.user.avatar == null || sessionScope.user.avatar eq ''}">
                                         <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                                             <img class="rounded-circle mt-5" width="100px" height="100px" 
-                                                 src="~/../images/user.png"
-                                                 >
+                                                 src="~/../images/user.png">
                                         </div>
                                     </c:if>
                                 </div>
@@ -242,15 +239,15 @@
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
         <script src="assets/js/script.js"></script>
         <script>
-                                                            function validateForm() {
-                                                                var newPassword = document.getElementById("newPassword").value;
-                                                                var confirmPassword = document.getElementById("newPasswordCf").value;
-                                                                if (newPassword !== confirmPassword) {
-                                                                    alert("New password and confirm password do not match");
-                                                                    return false;
-                                                                }
-                                                                return true;
-                                                            }
+            function validateForm() {
+                var newPassword = document.getElementById("newPassword").value;
+                var confirmPassword = document.getElementById("newPasswordCf").value;
+                if (newPassword !== confirmPassword) {
+                    alert("New password and confirm password do not match");
+                    return false;
+                }
+                return true;
+            }
         </script>
     </body>
 </html>

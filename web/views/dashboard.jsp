@@ -29,8 +29,6 @@
                 font-size: 20px;
                 border-radius: 5px;
             }
-        </style>
-        <style>
             li.nav-item a.active{
                 color: blue;
                 font-weight: bold;
@@ -109,7 +107,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div><!--end col-->
+                                        </div>
+                                        <!--end col-->
 
                                         <div class="col-xl-3 col-lg-4 col-md-4 mt-4">
                                             <div class="card features feature-primary rounded border-0 shadow p-4">
@@ -123,7 +122,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div><!--end col-->
+                                        </div>
+                                        <!--end col-->
                                     </div>
                                     <br>
 
@@ -149,7 +149,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="col-xl-6">
                                             <div class="card mb-4">
                                                 <div class="card-header">
@@ -173,25 +172,22 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="./js/scripts.js"></script>
         <script>
-
-                                            // Set new default font family and font color to mimic Bootstrap's default styling
-                                            Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-                                            Chart.defaults.global.defaultFontColor = '#292b2c';
-                                            // Pie Chart Example
-                                            var ctx = document.getElementById("myPieChartAdminCustomers");
-                                            var myPieChart = new Chart(ctx, {
-                                            type: 'pie',
-                                                    data: {
-                                                    labels: [<c:forEach  items="${listStatusOrder}" var="status" > "${status}",</c:forEach>],
-                                                            datasets: [{
-                                                            data: [${totalOrder1}, ${totalOrder2}, ${totalOrder3},${totalOrder4}],
-                                                                    backgroundColor: ['green', 'red', 'blue', 'gray'],
-                                                            }],
-                                                    },
-                                            });
-        </script>
-
-        <script>
+            // Set new default font family and font color to mimic Bootstrap's default styling
+            Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#292b2c';
+            // Pie Chart Example
+            var ctx = document.getElementById("myPieChartAdminCustomers");
+            var myPieChart = new Chart(ctx, {
+            type: 'pie',
+                    data: {
+                    labels: [<c:forEach  items="${listStatusOrder}" var="status" > "${status}",</c:forEach>],
+                            datasets: [{
+                            data: [${totalOrder1}, ${totalOrder2}, ${totalOrder3},${totalOrder4}],
+                                    backgroundColor: ['green', 'red', 'blue', 'gray'],
+                            }],
+                    },
+            });
+       
             // Set new default font family and font color to mimic Bootstrap's default styling
             Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#292b2c';
